@@ -1,6 +1,6 @@
 # Written and developed by Shoma Yamanouchi, Brian J. Park, and Hannah Cheng
 # Contact: syamanou@physics.utoronto.ca OR xxx
-# Website: https://sites.google.com/view/shoma-yamanouchi OR Brian's OR Hannah's websites
+# Website: https://sites.google.com/view/shoma-yamanouchi OR https://brianjmpark.github.io/ OR Hannah's websites
 # version 1.0
 # Developed in Python 2.7.18
 version = '1.0'
