@@ -98,8 +98,8 @@ class MainMenu(wx.Frame):
         dlg.Destroy()
     def MacOpenFile(self, filename):
         """Called for files droped on dock icon, or opened via finders context menu"""
-        print filename
-        print "%s dropped on app"%(filename) #code to load filename goes here.
+        print(filename)
+        print("%s dropped on app"% + filename) #code to load filename goes here.
         self.OpenFileMessage(filename)        
     def MacReopenApp(self):
         """Called when the doc icon is clicked, and ???"""
