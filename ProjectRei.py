@@ -1,5 +1,5 @@
 # Written and developed by Shoma Yamanouchi, Brian J. Park, and Hannah Cheng
-# Contact: syamanou@physics.utoronto.ca OR xxx
+# Contact: syamanou@physics.utoronto.ca OR brianjmpark@gmail.com
 # Website: https://sites.google.com/view/shoma-yamanouchi OR https://brianjmpark.github.io/ OR Hannah's websites
 # version 1.0
 # Developed in Python 2.7.18
@@ -10,6 +10,7 @@ import os, sys, wx, csv
 import wx.lib.scrolledpanel as scrolled
 
 class MainMenu(wx.Frame):
+    #main panel constructor
     def __init__(self):
         super(MainMenu, self).__init__(parent=None, title='Easy A',size=(550,600))
         self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
@@ -28,8 +29,11 @@ class MainMenu(wx.Frame):
         
         # Main window layout
         menu_sizer = wx.BoxSizer(wx.VERTICAL)
+        
         #self.text_ctrl = wx.TextCtrl(panel)
         #menu_sizer.AddSpacer(0)
+        
+        #top left design
         shoma_icon = wx.StaticBitmap(panel, bitmap=wx.Bitmap('./images/Easy_A_logo_mini.png'),style = wx.ALIGN_LEFT)
         menu_sizer.Add(shoma_icon, 0, wx.RIGHT | wx.LEFT, 20)
         #menu_sizer.AddSpacer(0)
@@ -38,6 +42,7 @@ class MainMenu(wx.Frame):
         Welcome.SetLabel('Easy A\nMain Menu\n\n')
         Welcome.SetFont(Header_font)
         menu_sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
+
         if existingfile:
             try:
                 for i,row in enumerate(savedata):
@@ -57,6 +62,7 @@ class MainMenu(wx.Frame):
             except: pass
         else: pass
 
+        #buttons UI
         start_button = wx.Button(panel, label='Add Class') # button to add class (calls self.start_press function)
         start_button.Bind(wx.EVT_BUTTON, self.start_press)
         menu_sizer.Add(start_button, 0, wx.UP | wx.LEFT, 20)
@@ -75,6 +81,7 @@ class MainMenu(wx.Frame):
         menu_sizer.Add(shoma_statement,1,wx.UP | wx.CENTER,0)
         panel.SetSizer(menu_sizer)
         self.Show()
+
     def menuquit(self,Event):
         self.Destroy()
     def OnAbout(self, event):
@@ -108,10 +115,12 @@ class MainMenu(wx.Frame):
         pass
     def MacPrintFile(self, file_path):
         pass
+
     def start_press(self, event): # add class, calls AddClassWindow, which opens a pop up
         #inputpath = self.text_ctrl.GetValue()
         classinfo = AddClassWindow(self)  
         return classinfo 
+
     def QuitAll(self, event):
         wx.Exit()
         
@@ -194,6 +203,18 @@ def AddClassWindow(parentframe):
             window_size.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 15)
             Midtermscore = self.text_ctrl31.GetValue()
             self.classinfo['Midterm'] = (Midtermweight,Midtermscore)
+
+            Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
+            Target.SetLabel('Final exam weight (0-100%) and your target course %')
+            window_size.Add(Target, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl4 = wx.TextCtrl(panel)
+            window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
+            Finalweight = self.text_ctrl4.GetValue()
+            self.text_ctrl41 = wx.TextCtrl(panel)
+            window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
+            Targetscore = self.text_ctrl41.GetValue()
+            self.classinfo['Target'] = (Finalweight, Targetscore)
+
             window_size.AddSpacer(60)
             add_button = wx.Button(panel, label='Add')
             add_button.Bind(wx.EVT_BUTTON, self.addpress)
@@ -210,9 +231,32 @@ def AddClassWindow(parentframe):
         def closepress(self, event):
             self.Close()
             return False
+
         def addpress(self, event):
             self.Close()
             return self.classinfo
+            turn = 0
+            for i, j in classinfo.items():
+                if isinstance(j, str) != True:
+                    if i != 'Target':
+                        if turn == 0:
+                            mark = j[1]*(0.01*j[0])
+                        if turn != 0:
+                            mark1 = j[1]*(0.01*j[0])
+                            mark = mark1 + mark
+                        turn +=1
+                    if i == 'Target':
+                        target_mark = j[1] - mark
+                        mark_reqd = (target_mark / j[0])*100
+                if isinstance(j, str) == True:
+                    my_course = j
+
+            #mark_reqd is the target score on landing page (target)
+            #my_course is the course to be added to landing page (classname)
+            #might need to move this somewhere else
+
+
+
     AddClassWindow()
 
 
