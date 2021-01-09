@@ -6,15 +6,18 @@
 version = '1.0'
 DEVELOPED_BY_SHOMA = 'Easy A 2021 (c) was developed by:\nShoma Yamanouchi,\nBrian J. Park,\nand Hannah Cheng'
 
-import os, sys, wx, csv
+import os, sys, wx, csv, wx.adv
 import wx.lib.scrolledpanel as scrolled
 
 class MainMenu(wx.Frame):
     #main panel constructor
     def __init__(self):
-        super(MainMenu, self).__init__(parent=None, title='Easy A',size=(550,600))
+        screensize = (550,600)
+        super(MainMenu, self).__init__(parent=None, title='Easy A',size=screensize)
         self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
         panel = wx.Panel(self)
+        #panelscroll = wx.lib.scrolledpanel.ScrolledPanel(self,-1, size=(-1,-1), pos=(-1,-1), style=wx.SIMPLE_BORDER)
+        #panelscroll.SetupScrolling()
         # Menu bar stuff
         self.menubar = wx.MenuBar()
         wx.MenuBar.MacSetCommonMenuBar(self.menubar)
@@ -54,10 +57,11 @@ class MainMenu(wx.Frame):
                         Header.SetFont(Header_font.Underlined())
                         Header.SetLabel('Class: \t Target Score  \tExam Date\n')
                         menu_sizer.Add(Header, 0, wx.RIGHT | wx.LEFT, 20)
-                    Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
-                    Grades.SetFont(Header_font)
-                    Grades.SetLabel(classname + ':\t' + target + '% \t' + date + '\n')
-                    menu_sizer.Add(Grades, 0, wx.RIGHT | wx.LEFT, 20)
+                    # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+                    # Grades.SetFont(Header_font)
+                    inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
+                    self.cb = wx.CheckBox(panel, label=inputs)
+                    menu_sizer.Add(self.cb)
 
             except: pass
         else: pass
@@ -119,6 +123,7 @@ class MainMenu(wx.Frame):
     def start_press(self, event): # add class, calls AddClassWindow, which opens a pop up
         #inputpath = self.text_ctrl.GetValue()
         classinfo = AddClassWindow(self)  
+        print classinfo
         return classinfo 
 
     def QuitAll(self, event):
@@ -158,7 +163,7 @@ def AddClassWindow(parentframe):
     """
     class AddClassWindow(wx.Frame):
         def __init__(self):
-            super(AddClassWindow, self).__init__(parent=parentframe, title='Adding a class',size=(400, 700))#(400, 400)
+            super(AddClassWindow, self).__init__(parent=parentframe, title='Adding a class',size=(350, 800))#(400, 400)
             panel = wx.Panel(self)
             window_size = wx.BoxSizer(wx.VERTICAL)
             self.classinfo = dict()
@@ -215,6 +220,12 @@ def AddClassWindow(parentframe):
             Targetscore = self.text_ctrl41.GetValue()
             self.classinfo['Target'] = (Finalweight, Targetscore)
 
+            ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
+            ExamDate.SetLabel('Exam date')
+            window_size.Add(ExamDate, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT)
+            window_size.Add(self.text_ctrl5, 0, wx.UP | wx.CENTER, 15)
+
             window_size.AddSpacer(60)
             add_button = wx.Button(panel, label='Add')
             add_button.Bind(wx.EVT_BUTTON, self.addpress)
@@ -233,6 +244,9 @@ def AddClassWindow(parentframe):
             return False
 
         def addpress(self, event):
+            date = self.text_ctrl5.GetValue()
+            self.classinfo['Date'] = date.Format('%Y/%m/%d')
+            #print self.classinfo['Date']
             self.Close()
             return self.classinfo
             turn = 0
