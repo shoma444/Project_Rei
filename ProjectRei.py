@@ -176,10 +176,10 @@ def AddClassWindow(parentframe):
             window_size.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl1 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl1, 0, wx.UP | wx.CENTER, 15)
-            quizweight = self.text_ctrl1.GetValue()
+            quizweight = float(self.text_ctrl1.GetValue())
             self.text_ctrl11 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl11, 0, wx.UP | wx.CENTER, 15)
-            quizscore = self.text_ctrl11.GetValue()
+            quizscore = float(self.text_ctrl11.GetValue())
             self.classinfo['quiz'] = (quizweight,quizscore)
 
             Assignment = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
@@ -187,10 +187,10 @@ def AddClassWindow(parentframe):
             window_size.Add(Assignment, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl2 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl2, 0, wx.UP | wx.CENTER, 15)
-            Assignmentweight = self.text_ctrl2.GetValue()
+            Assignmentweight = float(self.text_ctrl2.GetValue())
             self.text_ctrl21 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl21, 0, wx.UP | wx.CENTER, 15)
-            Assignmentscore = self.text_ctrl21.GetValue()
+            Assignmentscore = float(self.text_ctrl21.GetValue())
             self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
 
             Midterm = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
@@ -198,10 +198,10 @@ def AddClassWindow(parentframe):
             window_size.Add(Midterm, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl3 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl3, 0, wx.UP | wx.CENTER, 15)
-            Midtermweight = self.text_ctrl3.GetValue()
+            Midtermweight = float(self.text_ctrl3.GetValue())
             self.text_ctrl31 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 15)
-            Midtermscore = self.text_ctrl31.GetValue()
+            Midtermscore = float(self.text_ctrl31.GetValue())
             self.classinfo['Midterm'] = (Midtermweight,Midtermscore)
 
             Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
@@ -209,10 +209,10 @@ def AddClassWindow(parentframe):
             window_size.Add(Target, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl4 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
-            Finalweight = self.text_ctrl4.GetValue()
+            Finalweight = float(self.text_ctrl4.GetValue())
             self.text_ctrl41 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
-            Targetscore = self.text_ctrl41.GetValue()
+            Targetscore = float(self.text_ctrl41.GetValue())
             self.classinfo['Target'] = (Finalweight, Targetscore)
 
             window_size.AddSpacer(60)
@@ -249,14 +249,14 @@ def AddClassWindow(parentframe):
                         target_mark = j[1] - mark
                         mark_reqd = (target_mark / j[0])*100
                 if isinstance(j, str) == True:
-                    my_course = j
+                	if i == 'classname':
+                    	my_course = j
+                    if i == 'Date':
+                    	exam_date == j
 
             return mark_reqd
             return my_course
-
-            #mark_reqd is the target score on landing page (target)
-            #my_course is the course to be added to landing page (classname)
-            #might need to move this somewhere else
+            return exam_date
 
 
 
