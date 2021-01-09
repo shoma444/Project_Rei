@@ -1,6 +1,6 @@
 # Project_Rei
-https://github.com/shoma444/Project_Rei.git
-MacOS app project
+https://github.com/shoma444/Project_Rei.git  
+MacOS app project  
 Contributors: Shoma Yamanouchi, Brian J. Park, and Hannah Cheng
 
 Currently developed in Python 2.7.18
