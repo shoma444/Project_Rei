@@ -251,6 +251,9 @@ def AddClassWindow(parentframe):
                 if isinstance(j, str) == True:
                     my_course = j
 
+            return mark_reqd
+            return my_course
+
             #mark_reqd is the target score on landing page (target)
             #my_course is the course to be added to landing page (classname)
             #might need to move this somewhere else
