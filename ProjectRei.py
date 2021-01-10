@@ -19,7 +19,7 @@ class MainMenu(wx.Frame):
         panel = wx.Panel(self)
         self.panel = panel
         wx.lib.colourdb.updateColourDB()
-        my_colour = wx.NamedColour("PAPAYA WHIP")
+        my_colour = wx.NamedColour("grey")
         #extended colour palette from https://github.com/wxWidgets/Phoenix/blob/master/wx/lib/colourdb.py
         self.SetBackgroundColour(my_colour)
         
@@ -204,6 +204,23 @@ class MainMenu(wx.Frame):
             self.scrollingclasses2.SetSizer(self.scrollsizer2)
             self.scrollingclasses2.Layout()
         else:
+            try:
+                #
+                savefile = open('./save/saved.text','r') # read previously inputted data (if available)
+                newsavedata = savefile.read().splitlines()
+                for i,row in enumerate(newsavedata):
+                    classname = row.split(',')[0]
+                    target = row.split(',')[1]
+                    date = row.split(',')[2]
+                    # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+                    # Grades.SetFont(Header_font)
+                    inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
+                    self.cb = wx.CheckBox(self.scrollingclasses2, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
+                    self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
+                    self.scrollsizer2.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
+                savefile.close()
+                #
+            except: pass
             inputs = ' ' + self.addedclass[0] + ':\t' + self.addedclass[1] + '% \t' + self.addedclass[2] + '\n'
             self.cb = wx.CheckBox(self.scrollingclasses2, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
             self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
