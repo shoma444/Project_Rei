@@ -188,6 +188,8 @@ class MainMenu(wx.Frame):
         Welcome.SetFont(Header_font)
         self.sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
         """
+        self.deleteoredit = []
+        self.addedclass = []
         self.scrollingclasses.Destroy()
         self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
         self.scrollingclasses2.SetAutoLayout(1)
