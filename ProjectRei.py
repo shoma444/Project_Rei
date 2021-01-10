@@ -189,7 +189,6 @@ class MainMenu(wx.Frame):
         self.sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
         """
         self.deleteoredit = []
-        self.addedclass = []
         self.scrollingclasses.Destroy()
         self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
         self.scrollingclasses2.SetAutoLayout(1)
@@ -313,9 +312,9 @@ def AddClassWindow(parentframe):
             window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
 
             ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
-            ExamDate.SetLabel('Exam date')
+            ExamDate.SetLabel('Final exam date')
             window_size.Add(ExamDate, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT)
+            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT,dt=wx.DateTime.Now())
             window_size.Add(self.text_ctrl5, 0, wx.UP | wx.CENTER, 15)
 
             window_size.AddSpacer(60)
