@@ -55,7 +55,7 @@ class MainMenu(wx.Frame):
                     if i == 0:
                         Header = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
                         Header.SetFont(Header_font.Underlined())
-                        Header.SetLabel('Class: \t Target Score  \tExam Date\n')
+                        Header.SetLabel(' Class\t Target Score  \tExam Date\n')
                         menu_sizer.Add(Header, 0, wx.RIGHT | wx.LEFT, 20)
                     # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
                     # Grades.SetFont(Header_font)
@@ -275,10 +275,10 @@ def AddClassWindow(parentframe):
                         target_mark = j[1] - mark
                         mark_reqd = (target_mark / j[0])*100
                 if isinstance(j, str) == True:
-                	if i == 'classname':
-                    	my_course == j
+                    if i == 'classname':
+                        my_course = j
                     if i == 'Date':
-                    	exam_date == j
+                    	exam_date = j
 
             return mark_reqd
             return my_course
