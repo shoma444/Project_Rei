@@ -336,7 +336,7 @@ def AddClassWindow(parentframe):
 
             Midtermweight = self.text_ctrl3.GetValue()
             Midtermscore = self.text_ctrl31.GetValue()
-            self.classinfo['Assignment'] = (Midtermweight,Midtermscore)
+            self.classinfo['Midterm'] = (Midtermweight,Midtermscore)
 
             Finalweight = self.text_ctrl4.GetValue()
             Targetscore = self.text_ctrl41.GetValue()
@@ -348,6 +348,7 @@ def AddClassWindow(parentframe):
             #print(self.classinfo)
 
             turn = 0
+            #initiate loop
             for i, j in self.classinfo.items():
                 if isinstance(j, str) != True:
                     if i != 'Target':
@@ -356,10 +357,13 @@ def AddClassWindow(parentframe):
                         if turn != 0:
                             mark1 = float(j[1])*(0.01*float(j[0]))
                             mark = mark1 + mark
+                            #summing up marks over loop
                         turn +=1
                     if i == 'Target':
                         target_mark = float(j[1]) - mark
+                        #percentage of mark required to hit threshold
                         mark_reqd = (target_mark / float(j[0]))*100
+                        #percentage out of 100 required on exam
                 if isinstance(j, str) == True:
                     if i == 'classname':
                         my_course = j
