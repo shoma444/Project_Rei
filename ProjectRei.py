@@ -382,7 +382,11 @@ def AddClassWindow(parentframe):
             my_course = my_course.upper() # make classname uppercase
             parent.addedclass = [my_course,str(int(mark_reqd)),exam_date]
             parent.newclassreload()
-            """
+            """ 
+
+            ### Currently commented out so that the saved txt ###
+            ### file does not become filled up during testing ###
+
             if os.path.isfile('./save/saved.text'): # open existing save file
                 saved = open('./save/saved.text','a+')
             else:
