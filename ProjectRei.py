@@ -176,10 +176,6 @@ def AddClassWindow(parentframe):
             classname = self.text_ctrl.GetValue()
             self.classinfo['classname'] = classname
 
-            def to_float(my_value):
-            	my_float = float(my_value)
-            	return my_float
-
             Quiz = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
             Quiz.SetLabel('Quiz weight (0-100%) and your score')
             window_size.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
@@ -189,8 +185,6 @@ def AddClassWindow(parentframe):
             self.text_ctrl11 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl11, 0, wx.UP | wx.CENTER, 15)
             quizscore = self.text_ctrl11.GetValue()
-            quizweight = to_float(quizweight)
-            quizscore = to_float(quizscore)
             self.classinfo['quiz'] = (quizweight,quizscore)
 
             Assignment = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
@@ -202,8 +196,6 @@ def AddClassWindow(parentframe):
             self.text_ctrl21 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl21, 0, wx.UP | wx.CENTER, 15)
             Assignmentscore = self.text_ctrl21.GetValue()
-            Assignmentweight = to_float(Assignmentweight)
-            Assignmentscore = to_float(Assignmentscore)
             self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
 
             Midterm = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
@@ -215,8 +207,6 @@ def AddClassWindow(parentframe):
             self.text_ctrl31 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 15)
             Midtermscore = self.text_ctrl31.GetValue()
-            Midtermweight = to_float(Midtermweight)
-            Midtermscore = to_float(Midtermscore)
             self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
 
             Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
@@ -228,8 +218,6 @@ def AddClassWindow(parentframe):
             self.text_ctrl41 = wx.TextCtrl(panel)
             window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
             Targetscore = self.text_ctrl41.GetValue()
-            Finalweight = to_float(Finalweight)
-            Targetscore = to_float(Targetscore)
             self.classinfo['Target'] = (Finalweight, Targetscore)
 
             ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
@@ -266,14 +254,14 @@ def AddClassWindow(parentframe):
                 if isinstance(j, str) != True:
                     if i != 'Target':
                         if turn == 0:
-                            mark = j[1]*(0.01*j[0])
+                            mark = float(j[1])*(0.01*float(j[0]))
                         if turn != 0:
-                            mark1 = j[1]*(0.01*j[0])
+                            mark1 = float(j[1])*(0.01*float(j[0]))
                             mark = mark1 + mark
                         turn +=1
                     if i == 'Target':
-                        target_mark = j[1] - mark
-                        mark_reqd = (target_mark / j[0])*100
+                        target_mark = float(j[1]) - mark
+                        mark_reqd = (target_mark / float(j[0]))*100
                 if isinstance(j, str) == True:
                     if i == 'classname':
                         my_course = j
