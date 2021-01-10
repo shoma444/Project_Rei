@@ -264,7 +264,7 @@ def AddClassWindow(parentframe):
                         mark_reqd = (target_mark / j[0])*100
                 if isinstance(j, str) == True:
                 	if i == 'classname':
-                    	my_course = j
+                    	my_course == j
                     if i == 'Date':
                     	exam_date == j
 
