@@ -37,19 +37,19 @@ class MainMenu(wx.Frame):
         #menu_sizer.AddSpacer(0)
         
         #top left design
-        shoma_icon = wx.StaticBitmap(panel, bitmap=wx.Bitmap('./images/Easy_A_logo_mini.png'),style = wx.ALIGN_LEFT)
-        self.sizer.Add(shoma_icon, 0, wx.RIGHT | wx.LEFT, 20)
+        self.shoma_icon = wx.StaticBitmap(panel, bitmap=wx.Bitmap('./images/Easy_A_logo_mini.png'),style = wx.ALIGN_LEFT)
+        self.sizer.Add(self.shoma_icon, 0, wx.RIGHT | wx.LEFT, 20)
         #menu_sizer.AddSpacer(0)
-        Header_font = wx.Font(14, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        Welcome = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
-        Welcome.SetLabel('Easy A\nMain Menu\n\n')
-        Welcome.SetFont(Header_font)
-        self.sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
+        self.Header_font = wx.Font(14, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
+        self.Welcome = wx.StaticText(self.panel, -1, style = wx.ALIGN_LEFT)
+        self.Welcome.SetLabel('Easy A\nMain Menu\n\n')
+        self.Welcome.SetFont(self.Header_font)
+        self.sizer.Add(self.Welcome, 0, wx.RIGHT | wx.LEFT, 20)
 
-        Header = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
-        Header.SetFont(Header_font.Underlined())
-        Header.SetLabel(' Class\t Target Score  \tExam Date\n')
-        self.sizer.Add(Header, 0, wx.RIGHT | wx.LEFT, 20)
+        self.Header = wx.StaticText(self.panel, -1, style = wx.ALIGN_LEFT)
+        self.Header.SetFont(self.Header_font.Underlined())
+        self.Header.SetLabel(' Class\t Target Score  \tExam Date\n')
+        self.sizer.Add(self.Header, 0, wx.RIGHT | wx.LEFT, 20)
 
         self.deleteoredit = []
         self.addedclass = []
@@ -174,22 +174,9 @@ class MainMenu(wx.Frame):
 
     def newclassreload(self): # function called by OTHER frames to reload this page
         print('(test) Added class is: ',self.addedclass)
-        """
-        self.panel = wx.Panel(self)
-        self.sizer  = wx.BoxSizer(wx.VERTICAL)
-
-        #top left design
-        shoma_icon = wx.StaticBitmap(self.panel, bitmap=wx.Bitmap('./images/Easy_A_logo_mini.png'),style = wx.ALIGN_LEFT)
-        self.sizer.Add(shoma_icon, 0, wx.RIGHT | wx.LEFT, 20)
-        #menu_sizer.AddSpacer(0)
-        Header_font = wx.Font(14, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        Welcome = wx.StaticText(self.panel, -1, style = wx.ALIGN_LEFT)
-        Welcome.SetLabel('Easy A\nMain Menu\n\n')
-        Welcome.SetFont(Header_font)
-        self.sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
-        """
+        
         self.deleteoredit = []
-        self.scrollingclasses.Destroy()
+
         self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
         self.scrollingclasses2.SetAutoLayout(1)
         self.scrollingclasses2.SetupScrolling()
@@ -222,12 +209,13 @@ class MainMenu(wx.Frame):
         self.scrollingclasses2.Update()
         self.scrollingclasses2.Show()
 
-        #self.sizer.Replace(self.scrollingclasses, self.scrollingclasses2)
-        self.sizer.Add(self.scrollingclasses2, 1, wx.EXPAND)
+        self.sizer.Replace(self.scrollingclasses, self.scrollingclasses2)
+        self.scrollingclasses.Destroy()
+        #self.sizer.Add(self.scrollingclasses2, 1, wx.EXPAND)
 
+        self.sizer.Layout()
         self.Refresh()
         self.Update()
-        self.Layout()
         self.Show()
 
     def QuitAll(self, event):
