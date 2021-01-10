@@ -8,6 +8,7 @@ DEVELOPED_BY_SHOMA = 'Easy A 2021 (c) was developed by:\nShoma Yamanouchi,\nBria
 
 import os, sys, wx, csv, wx.adv
 import wx.lib.scrolledpanel as scrolled
+from wx.lib.colourdb import *
 
 class MainMenu(wx.Frame):
     #main panel constructor
@@ -17,7 +18,11 @@ class MainMenu(wx.Frame):
         self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
         panel = wx.Panel(self)
         self.panel = panel
-
+        wx.lib.colourdb.updateColourDB()
+        my_colour = wx.NamedColour("PAPAYA WHIP")
+        #extended colour palette from https://github.com/wxWidgets/Phoenix/blob/master/wx/lib/colourdb.py
+        self.SetBackgroundColour(my_colour)
+        
         # Menu bar stuff
         self.menubar = wx.MenuBar()
         wx.MenuBar.MacSetCommonMenuBar(self.menubar)
