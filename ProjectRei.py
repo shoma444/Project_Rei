@@ -123,7 +123,7 @@ class MainMenu(wx.Frame):
     def start_press(self, event): # add class, calls AddClassWindow, which opens a pop up
         #inputpath = self.text_ctrl.GetValue()
         classinfo = AddClassWindow(self)  
-        print classinfo
+        print(classinfo)
         return classinfo 
 
     def QuitAll(self, event):
