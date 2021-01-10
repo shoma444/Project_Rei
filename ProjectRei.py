@@ -10,298 +10,286 @@ import os, sys, wx, csv, wx.adv
 import wx.lib.scrolledpanel as scrolled
 
 class MainMenu(wx.Frame):
-    #main panel constructor
-    def __init__(self):
-        screensize = (550,600)
-        super(MainMenu, self).__init__(parent=None, title='Easy A',size=screensize)
-        self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
-        panel = wx.Panel(self)
-        #panelscroll = wx.lib.scrolledpanel.ScrolledPanel(self,-1, size=(-1,-1), pos=(-1,-1), style=wx.SIMPLE_BORDER)
-        #panelscroll.SetupScrolling()
-        # Menu bar stuff
-        self.menubar = wx.MenuBar()
-        wx.MenuBar.MacSetCommonMenuBar(self.menubar)
-        fileMenu = wx.Menu()
-        aboutme = fileMenu.Append(wx.ID_ABOUT, '&About Easy A','Information about this program')
-        self.Bind(wx.EVT_MENU, self.OnAbout, aboutme)
-        wx.App.SetMacExitMenuItemId(wx.ID_EXIT)
-        quitmenu = fileMenu.Append(wx.ID_EXIT,'Quit Easy A','Terminate this program')
-        self.Bind(wx.EVT_MENU, self.menuquit, quitmenu)
-        self.menubar.Append(fileMenu, '|')
-        self.SetMenuBar(self.menubar)
-        
-        # Main window layout
-        menu_sizer = wx.BoxSizer(wx.VERTICAL)
-        
-        #self.text_ctrl = wx.TextCtrl(panel)
-        #menu_sizer.AddSpacer(0)
-        
-        #top left design
-        shoma_icon = wx.StaticBitmap(panel, bitmap=wx.Bitmap('./images/Easy_A_logo_mini.png'),style = wx.ALIGN_LEFT)
-        menu_sizer.Add(shoma_icon, 0, wx.RIGHT | wx.LEFT, 20)
-        #menu_sizer.AddSpacer(0)
-        Header_font = wx.Font(14, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        Welcome = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
-        Welcome.SetLabel('Easy A\nMain Menu\n\n')
-        Welcome.SetFont(Header_font)
-        menu_sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
+	#main panel constructor
+	def __init__(self):
+		screensize = (550,600)
+		super(MainMenu, self).__init__(parent=None, title='Easy A',size=screensize)
+		self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
+		panel = wx.Panel(self)
+		#panelscroll = wx.lib.scrolledpanel.ScrolledPanel(self,-1, size=(-1,-1), pos=(-1,-1), style=wx.SIMPLE_BORDER)
+		#panelscroll.SetupScrolling()
+		# Menu bar stuff
+		self.menubar = wx.MenuBar()
+		wx.MenuBar.MacSetCommonMenuBar(self.menubar)
+		fileMenu = wx.Menu()
+		aboutme = fileMenu.Append(wx.ID_ABOUT, '&About Easy A','Information about this program')
+		self.Bind(wx.EVT_MENU, self.OnAbout, aboutme)
+		wx.App.SetMacExitMenuItemId(wx.ID_EXIT)
+		quitmenu = fileMenu.Append(wx.ID_EXIT,'Quit Easy A','Terminate this program')
+		self.Bind(wx.EVT_MENU, self.menuquit, quitmenu)
+		self.menubar.Append(fileMenu, '|')
+		self.SetMenuBar(self.menubar)
+		
+		# Main window layout
+		menu_sizer = wx.BoxSizer(wx.VERTICAL)
+		
+		#self.text_ctrl = wx.TextCtrl(panel)
+		#menu_sizer.AddSpacer(0)
+		
+		#top left design
+		shoma_icon = wx.StaticBitmap(panel, bitmap=wx.Bitmap('./images/Easy_A_logo_mini.png'),style = wx.ALIGN_LEFT)
+		menu_sizer.Add(shoma_icon, 0, wx.RIGHT | wx.LEFT, 20)
+		#menu_sizer.AddSpacer(0)
+		Header_font = wx.Font(14, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
+		Welcome = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+		Welcome.SetLabel('Easy A\nMain Menu\n\n')
+		Welcome.SetFont(Header_font)
+		menu_sizer.Add(Welcome, 0, wx.RIGHT | wx.LEFT, 20)
 
-        if existingfile:
-            try:
-                for i,row in enumerate(savedata):
-                    classname = row.split(',')[0]
-                    target = row.split(',')[1]
-                    date = row.split(',')[2]
-                    if i == 0:
-                        Header = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
-                        Header.SetFont(Header_font.Underlined())
-                        Header.SetLabel('Class: \t Target Score  \tExam Date\n')
-                        menu_sizer.Add(Header, 0, wx.RIGHT | wx.LEFT, 20)
-                    # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
-                    # Grades.SetFont(Header_font)
-                    inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
-                    self.cb = wx.CheckBox(panel, label=inputs)
-                    menu_sizer.Add(self.cb)
+		if existingfile:
+			try:
+				for i,row in enumerate(savedata):
+					classname = row.split(',')[0]
+					target = row.split(',')[1]
+					date = row.split(',')[2]
+					if i == 0:
+						Header = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+						Header.SetFont(Header_font.Underlined())
+						Header.SetLabel('Class: \t Target Score  \tExam Date\n')
+						menu_sizer.Add(Header, 0, wx.RIGHT | wx.LEFT, 20)
+					# Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+					# Grades.SetFont(Header_font)
+					inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
+					self.cb = wx.CheckBox(panel, label=inputs)
+					menu_sizer.Add(self.cb)
 
-            except: pass
-        else: pass
+			except: pass
+		else: pass
 
-        #buttons UI
-        start_button = wx.Button(panel, label='Add Class') # button to add class (calls self.start_press function)
-        start_button.Bind(wx.EVT_BUTTON, self.start_press)
-        menu_sizer.Add(start_button, 0, wx.UP | wx.LEFT, 20)
-        menu_sizer.AddSpacer(5)
+		#buttons UI
+		start_button = wx.Button(panel, label='Add Class') # button to add class (calls self.start_press function)
+		start_button.Bind(wx.EVT_BUTTON, self.start_press)
+		menu_sizer.Add(start_button, 0, wx.UP | wx.LEFT, 20)
+		menu_sizer.AddSpacer(5)
 
-        quit_button = wx.Button(panel, label='Quit') # button to quit the program
-        quit_button.Bind(wx.EVT_BUTTON, self.QuitAll)
-        menu_sizer.Add(quit_button, 0, wx.DOWN | wx.LEFT, 20)
-        menu_sizer.AddSpacer(15)
+		quit_button = wx.Button(panel, label='Quit') # button to quit the program
+		quit_button.Bind(wx.EVT_BUTTON, self.QuitAll)
+		menu_sizer.Add(quit_button, 0, wx.DOWN | wx.LEFT, 20)
+		menu_sizer.AddSpacer(15)
 
-        menu_sizer.Add((0,0), 1, wx.EXPAND)
-        shoma_statement = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
-        shoma_statement_font = wx.Font(12, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        shoma_statement.SetFont(shoma_statement_font)
-        shoma_statement.SetLabel('Version '+version + '\n' + DEVELOPED_BY_SHOMA)
-        menu_sizer.Add(shoma_statement,1,wx.UP | wx.CENTER,0)
-        panel.SetSizer(menu_sizer)
-        self.Show()
+		menu_sizer.Add((0,0), 1, wx.EXPAND)
+		shoma_statement = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+		shoma_statement_font = wx.Font(12, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
+		shoma_statement.SetFont(shoma_statement_font)
+		shoma_statement.SetLabel('Version '+version + '\n' + DEVELOPED_BY_SHOMA)
+		menu_sizer.Add(shoma_statement,1,wx.UP | wx.CENTER,0)
+		panel.SetSizer(menu_sizer)
+		self.Show()
 
-    def menuquit(self,Event):
-        self.Destroy()
-    def OnAbout(self, event):
-        dlg = wx.MessageDialog(self, "Easy A\nVersion: "+version+"\nBy Shoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n",
-                                "About Me", wx.CENTER | wx.ICON_INFORMATION)
-        dlg.ShowModal()
-        dlg.Destroy()
-    def MacReopenApp(self):
-        self.GetTopWindow().Raise()
-    def OnActivate(self, event):
-        # if this is an activate event, rather than something else, like iconize.
-        if event.GetActive():
-            self.BringWindowToFront()
-        event.Skip()
-    def OpenFileMessage(self, filename):
-        dlg = wx.MessageDialog(None,
-                               "This app was just asked to open:\n%s\n"%filename,
-                               "File Dropped",
-                               wx.OK|wx.ICON_INFORMATION)
-        dlg.ShowModal()
-        dlg.Destroy()
-    def MacOpenFile(self, filename):
-        """Called for files droped on dock icon, or opened via finders context menu"""
-        print(filename)
-        print("%s dropped on app"% + filename) #code to load filename goes here.
-        self.OpenFileMessage(filename)        
-    def MacReopenApp(self):
-        """Called when the doc icon is clicked, and ???"""
-        self.BringWindowToFront()
-    def MacNewFile(self):
-        pass
-    def MacPrintFile(self, file_path):
-        pass
+	def menuquit(self,Event):
+		self.Destroy()
+	def OnAbout(self, event):
+		dlg = wx.MessageDialog(self, "Easy A\nVersion: "+version+"\nBy Shoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n",
+								"About Me", wx.CENTER | wx.ICON_INFORMATION)
+		dlg.ShowModal()
+		dlg.Destroy()
+	def MacReopenApp(self):
+		self.GetTopWindow().Raise()
+	def OnActivate(self, event):
+		# if this is an activate event, rather than something else, like iconize.
+		if event.GetActive():
+			self.BringWindowToFront()
+		event.Skip()
+	def OpenFileMessage(self, filename):
+		dlg = wx.MessageDialog(None,
+							   "This app was just asked to open:\n%s\n"%filename,
+							   "File Dropped",
+							   wx.OK|wx.ICON_INFORMATION)
+		dlg.ShowModal()
+		dlg.Destroy()
+	def MacOpenFile(self, filename):
+		"""Called for files droped on dock icon, or opened via finders context menu"""
+		print(filename)
+		print("%s dropped on app"% + filename) #code to load filename goes here.
+		self.OpenFileMessage(filename)        
+	def MacReopenApp(self):
+		"""Called when the doc icon is clicked, and ???"""
+		self.BringWindowToFront()
+	def MacNewFile(self):
+		pass
+	def MacPrintFile(self, file_path):
+		pass
 
-    def start_press(self, event): # add class, calls AddClassWindow, which opens a pop up
-        #inputpath = self.text_ctrl.GetValue()
-        classinfo = AddClassWindow(self)  
-        print classinfo
-        return classinfo 
+	def start_press(self, event): # add class, calls AddClassWindow, which opens a pop up
+		#inputpath = self.text_ctrl.GetValue()
+		classinfo = AddClassWindow(self)  
+		print classinfo
+		return classinfo 
 
-    def QuitAll(self, event):
-        wx.Exit()
-        
+	def QuitAll(self, event):
+		wx.Exit()
+		
 
 def WarningPopup(Title,Text,WindowSize,parentframe): # Generic warning popup window
-    """
-    :type Title: String
-    :type Text: String
-    :type WindowSize: tuple
-    :type parentframe: wx.Frame
-    :rtype: None
-    """
-    class WarningWindow(wx.Frame):
-        def __init__(self):
-            super(WarningWindow, self).__init__(parent=parentframe, title=Title,size=WindowSize)#(450, 110)
-            panel = wx.Panel(self)
-            errorwindow_size = wx.BoxSizer(wx.VERTICAL)
-            Warning = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
-            Warning.SetLabel(Text) # e.g., 'Missing value for Midterm'
-            errorwindow_size.Add(Warning, 0, wx.ALL | wx.CENTER, 15)
-            close_button = wx.Button(panel, label='Close')
-            close_button.Bind(wx.EVT_BUTTON, self.closepress)
-            errorwindow_size.Add(close_button, 0, wx.ALL | wx.CENTER, 0)
-            panel.SetSizer(errorwindow_size)
-            self.Show()
-            
-        def closepress(self, event):
-            self.Close()
-    WarningWindow()
+	"""
+	:type Title: String
+	:type Text: String
+	:type WindowSize: tuple
+	:type parentframe: wx.Frame
+	:rtype: None
+	"""
+	class WarningWindow(wx.Frame):
+		def __init__(self):
+			super(WarningWindow, self).__init__(parent=parentframe, title=Title,size=WindowSize)#(450, 110)
+			panel = wx.Panel(self)
+			errorwindow_size = wx.BoxSizer(wx.VERTICAL)
+			Warning = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+			Warning.SetLabel(Text) # e.g., 'Missing value for Midterm'
+			errorwindow_size.Add(Warning, 0, wx.ALL | wx.CENTER, 15)
+			close_button = wx.Button(panel, label='Close')
+			close_button.Bind(wx.EVT_BUTTON, self.closepress)
+			errorwindow_size.Add(close_button, 0, wx.ALL | wx.CENTER, 0)
+			panel.SetSizer(errorwindow_size)
+			self.Show()
+			
+		def closepress(self, event):
+			self.Close()
+	WarningWindow()
 
 def AddClassWindow(parentframe):
-    """
-    :type parentframe: wx.Frame
-    :rtype: dict classinfo (False if closed)
-    """
-    class AddClassWindow(wx.Frame):
-        def __init__(self):
-            super(AddClassWindow, self).__init__(parent=parentframe, title='Adding a class',size=(350, 800))#(400, 400)
-            panel = wx.Panel(self)
-            window_size = wx.BoxSizer(wx.VERTICAL)
-            self.classinfo = dict()
+	"""
+	:type parentframe: wx.Frame
+	:rtype: dict classinfo (False if closed)
+	"""
+	class AddClassWindow(wx.Frame):
+		def __init__(self):
+			super(AddClassWindow, self).__init__(parent=parentframe, title='Adding a class',size=(350, 800))#(400, 400)
+			panel = wx.Panel(self)
+			window_size = wx.BoxSizer(wx.VERTICAL)
+			self.classinfo = dict()
 
-            Name = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
-            Name.SetLabel('Class Name (e.g., MATH101)')
-            window_size.Add(Name, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl, 0, wx.UP | wx.CENTER, 15)
-            classname = self.text_ctrl.GetValue()
-            self.classinfo['classname'] = classname
+			Name = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+			Name.SetLabel('Class Name (e.g., MATH101)')
+			window_size.Add(Name, 0, wx.UP | wx.CENTER, 15)
+			self.text_ctrl = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl, 0, wx.UP | wx.CENTER, 15)
+			classname = self.text_ctrl.GetValue()
+			self.classinfo['classname'] = classname
 
-            def to_float(my_value):
-            	my_float = float(my_value)
-            	return my_float
+			Quiz = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+			Quiz.SetLabel('Quiz weight (0-100%) and your score')
+			window_size.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
+			self.text_ctrl1 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl1, 0, wx.UP | wx.CENTER, 15)
+			quizweight = self.text_ctrl1.GetValue()
+			self.text_ctrl11 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl11, 0, wx.UP | wx.CENTER, 15)
+			quizscore = self.text_ctrl11.GetValue()
+			self.classinfo['quiz'] = (quizweight,quizscore)
 
-            Quiz = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
-            Quiz.SetLabel('Quiz weight (0-100%) and your score')
-            window_size.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl1 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl1, 0, wx.UP | wx.CENTER, 15)
-            quizweight = self.text_ctrl1.GetValue()
-            self.text_ctrl11 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl11, 0, wx.UP | wx.CENTER, 15)
-            quizscore = self.text_ctrl11.GetValue()
-            quizweight = to_float(quizweight)
-            quizscore = to_float(quizscore)
-            self.classinfo['quiz'] = (quizweight,quizscore)
+			Assignment = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+			Assignment.SetLabel('Assignment weight (0-100%) and your score')
+			window_size.Add(Assignment, 0, wx.UP | wx.CENTER, 15)
+			self.text_ctrl2 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl2, 0, wx.UP | wx.CENTER, 15)
+			Assignmentweight = self.text_ctrl2.GetValue()
+			self.text_ctrl21 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl21, 0, wx.UP | wx.CENTER, 15)
+			Assignmentscore = self.text_ctrl21.GetValue()
+			self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
 
-            Assignment = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
-            Assignment.SetLabel('Assignment weight (0-100%) and your score')
-            window_size.Add(Assignment, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl2 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl2, 0, wx.UP | wx.CENTER, 15)
-            Assignmentweight = self.text_ctrl2.GetValue()
-            self.text_ctrl21 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl21, 0, wx.UP | wx.CENTER, 15)
-            Assignmentscore = self.text_ctrl21.GetValue()
-            Assignmentweight = to_float(Assignmentweight)
-            Assignmentscore = to_float(Assignmentscore)
-            self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
+			Midterm = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+			Midterm.SetLabel('Midterm weight (0-100%) and your score')
+			window_size.Add(Midterm, 0, wx.UP | wx.CENTER, 15)
+			self.text_ctrl3 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl3, 0, wx.UP | wx.CENTER, 15)
+			Midtermweight = self.text_ctrl3.GetValue()
+			self.text_ctrl31 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 15)
+			Midtermscore = self.text_ctrl31.GetValue()
+			self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
 
-            Midterm = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
-            Midterm.SetLabel('Midterm weight (0-100%) and your score')
-            window_size.Add(Midterm, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl3 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl3, 0, wx.UP | wx.CENTER, 15)
-            Midtermweight = self.text_ctrl3.GetValue()
-            self.text_ctrl31 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 15)
-            Midtermscore = self.text_ctrl31.GetValue()
-            Midtermweight = to_float(Midtermweight)
-            Midtermscore = to_float(Midtermscore)
-            self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
+			Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
+			Target.SetLabel('Final exam weight (0-100%) and your target course %')
+			window_size.Add(Target, 0, wx.UP | wx.CENTER, 15)
+			self.text_ctrl4 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
+			Finalweight = self.text_ctrl4.GetValue()
+			self.text_ctrl41 = wx.TextCtrl(panel)
+			window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
+			Targetscore = self.text_ctrl41.GetValue()
+			self.classinfo['Target'] = (Finalweight, Targetscore)
 
-            Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
-            Target.SetLabel('Final exam weight (0-100%) and your target course %')
-            window_size.Add(Target, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl4 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
-            Finalweight = self.text_ctrl4.GetValue()
-            self.text_ctrl41 = wx.TextCtrl(panel)
-            window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
-            Targetscore = self.text_ctrl41.GetValue()
-            Finalweight = to_float(Finalweight)
-            Targetscore = to_float(Targetscore)
-            self.classinfo['Target'] = (Finalweight, Targetscore)
+			ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
+			ExamDate.SetLabel('Exam date')
+			window_size.Add(ExamDate, 0, wx.UP | wx.CENTER, 15)
+			self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT)
+			window_size.Add(self.text_ctrl5, 0, wx.UP | wx.CENTER, 15)
 
-            ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
-            ExamDate.SetLabel('Exam date')
-            window_size.Add(ExamDate, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT)
-            window_size.Add(self.text_ctrl5, 0, wx.UP | wx.CENTER, 15)
+			window_size.AddSpacer(60)
+			add_button = wx.Button(panel, label='Add')
+			add_button.Bind(wx.EVT_BUTTON, self.addpress)
+			window_size.Add(add_button, 0, wx.UP | wx.CENTER, 0)
+			panel.SetSizer(window_size)
+			window_size.AddSpacer(30)
 
-            window_size.AddSpacer(60)
-            add_button = wx.Button(panel, label='Add')
-            add_button.Bind(wx.EVT_BUTTON, self.addpress)
-            window_size.Add(add_button, 0, wx.UP | wx.CENTER, 0)
-            panel.SetSizer(window_size)
-            window_size.AddSpacer(30)
+			close_button = wx.Button(panel, label='Close')
+			close_button.Bind(wx.EVT_BUTTON, self.closepress)
+			window_size.Add(close_button, 0, wx.UP | wx.CENTER, 0)
+			panel.SetSizer(window_size)
+			self.Show()
+			
+		def closepress(self, event):
+			self.Close()
+			return False
 
-            close_button = wx.Button(panel, label='Close')
-            close_button.Bind(wx.EVT_BUTTON, self.closepress)
-            window_size.Add(close_button, 0, wx.UP | wx.CENTER, 0)
-            panel.SetSizer(window_size)
-            self.Show()
-            
-        def closepress(self, event):
-            self.Close()
-            return False
+		def addpress(self, event):
+			date = self.text_ctrl5.GetValue()
+			self.classinfo['Date'] = date.Format('%Y/%m/%d')
+			#print self.classinfo['Date']
+			self.Close()
+			return self.classinfo
+			turn = 0
+			for i, j in classinfo.items():
+				if isinstance(j, str) != True:
+					if i != 'Target':
+						if turn == 0:
+							mark = float(j[1])*(0.01*float(j[0]))
+						if turn != 0:
+							mark1 = float(j[1])*(0.01*float(j[0]))
+							mark = mark1 + mark
+						turn +=1
+					if i == 'Target':
+						target_mark = float(j[1]) - mark
+						mark_reqd = (target_mark / float(j[0]))*100
+				if isinstance(j, str) == True:
+					if i == 'classname':
+						my_course = j
+					if i == 'Date':
+						exam_date = j
 
-        def addpress(self, event):
-            date = self.text_ctrl5.GetValue()
-            self.classinfo['Date'] = date.Format('%Y/%m/%d')
-            #print self.classinfo['Date']
-            self.Close()
-            return self.classinfo
-            turn = 0
-            for i, j in classinfo.items():
-                if isinstance(j, str) != True:
-                    if i != 'Target':
-                        if turn == 0:
-                            mark = j[1]*(0.01*j[0])
-                        if turn != 0:
-                            mark1 = j[1]*(0.01*j[0])
-                            mark = mark1 + mark
-                        turn +=1
-                    if i == 'Target':
-                        target_mark = j[1] - mark
-                        mark_reqd = (target_mark / j[0])*100
-                if isinstance(j, str) == True:
-                	if i == 'classname':
-                    	my_course == j
-                    if i == 'Date':
-                    	exam_date == j
-
-            return mark_reqd
-            return my_course
-            return exam_date
+			return mark_reqd
+			return my_course
+			return exam_date
 
 
 
-    AddClassWindow()
+	AddClassWindow()
 
 
 if __name__ == '__main__':
-    AppName = 'Easy A' # Placeholder app name
-    app = wx.App()
-    if os.path.isfile('./save/saved.text'):
-        savefile = open('./save/saved.text','r') # read previously inputted data (if available)
-        savedata = savefile.read().splitlines()
-        existingfile = True
-        savefile.close()
-    else:
-        #savefile = open('./save/saved.text','w+') # read previously inputted data (if available)
-        existingfile = False
-    wx.AppConsole.SetAppName(app,AppName)
-    wx.AppConsole.SetAppDisplayName(app,AppName)
-    frame = MainMenu()
-    app.MainLoop()
+	AppName = 'Easy A' # Placeholder app name
+	app = wx.App()
+	if os.path.isfile('./save/saved.text'):
+		savefile = open('./save/saved.text','r') # read previously inputted data (if available)
+		savedata = savefile.read().splitlines()
+		existingfile = True
+		savefile.close()
+	else:
+		#savefile = open('./save/saved.text','w+') # read previously inputted data (if available)
+		existingfile = False
+	wx.AppConsole.SetAppName(app,AppName)
+	wx.AppConsole.SetAppDisplayName(app,AppName)
+	frame = MainMenu()
+	app.MainLoop()
 
