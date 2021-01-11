@@ -160,10 +160,18 @@ class MainMenu(wx.Frame):
             classperc = cb.GetLabel().split(':')[1][1:].split('%')[0]
             classdate = cb.GetLabel().split('%')[1][-11:]
             self.deleteoredit.append([classname,classperc,classdate[:-1]])
+        if not cb.GetValue():
+            classname = cb.GetLabel().split(':')[0][1:] # get the name of class from label 
+            classperc = cb.GetLabel().split(':')[1][1:].split('%')[0]
+            classdate = cb.GetLabel().split('%')[1][-11:]
+            uncheck = [classname,classperc,classdate[:-1]]
+            self.deleteoredit.remove(uncheck)
 
     def deleteselected(self, event):
         if len(self.deleteoredit) > 0:
             print('call function to delete: ',self.deleteoredit) # need to write function to delete/edit selected class
+            WindowSize = (475,140+len(self.deleteoredit)*25)
+            DeleteWarning(self.deleteoredit,WindowSize,self)
             wx.Yield()
         else:
             WarningPopup('Nothing selected!','Please select the classes you wish to delete.',(450,100),self)
@@ -180,7 +188,7 @@ class MainMenu(wx.Frame):
         classinfo = AddClassWindow(self)  
 
     def newclassreload(self): # function called by OTHER frames to reload this page
-        print('(test) Added class is: ',self.addedclass)
+        #print('(test) Added class is: ',self.addedclass)
         
         self.deleteoredit = []
 
@@ -242,6 +250,45 @@ class MainMenu(wx.Frame):
         self.Update()
         self.Show()
 
+    def delclassreload(self): # function called by OTHER frames to reload this page
+        #print('(test) Deleted class is: ',self.deleteoredit)
+        self.deleteoredit_old = self.deleteoredit
+        
+        self.deleteoredit = []
+
+        self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
+        self.scrollingclasses2.SetAutoLayout(1)
+        self.scrollingclasses2.SetupScrolling()
+        self.scrollsizer2 = wx.BoxSizer(wx.VERTICAL)
+
+        for i,row in enumerate(savedata):
+            classname = row.split(',')[0]
+            target = row.split(',')[1]
+            date = row.split(',')[2]
+            current = [classname,target,date]
+            if current not in self.deleteoredit_old:
+                # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+                # Grades.SetFont(Header_font)
+                inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
+                self.cb = wx.CheckBox(self.scrollingclasses2, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
+                self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
+                self.scrollsizer2.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
+                self.scrollingclasses2.SetSizer(self.scrollsizer2)
+                self.scrollingclasses2.Layout()
+            
+        self.scrollingclasses2.Refresh()
+        self.scrollingclasses2.Update()
+        self.scrollingclasses2.Show()
+
+        self.sizer.Replace(self.scrollingclasses, self.scrollingclasses2)
+        self.scrollingclasses.Destroy()
+        #self.sizer.Add(self.scrollingclasses2, 1, wx.EXPAND)
+
+        self.sizer.Layout()
+        self.Refresh()
+        self.Update()
+        self.Show()
+
     def QuitAll(self, event):
         wx.Exit()
         
@@ -271,6 +318,67 @@ def WarningPopup(Title,Text,WindowSize,parentframe): # Generic warning popup win
         def closepress(self, event):
             self.Close()
     WarningWindow()
+
+def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup window
+    """
+    :type listdel: List
+    :type WindowSize: tuple
+    :type parentframe: wx.Frame
+    :rtype: None
+    """
+    class DeleteWarningWindow(wx.Frame):
+        def __init__(self):
+            super(DeleteWarningWindow, self).__init__(parent=parentframe, title='Deleting entries',size=WindowSize)#(450, 110)
+            panel = wx.Panel(self)
+            errorwindow_size = wx.BoxSizer(wx.VERTICAL)
+            Warning = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+            Warning.SetLabel('The following will be deleted:') # e.g., 'Missing value for Midterm'
+            errorwindow_size.Add(Warning, 0, wx.ALL | wx.CENTER, 15)
+            for classes in listdel:
+                classname,classperc,classdate = classes[0],classes[1],classes[2]
+                info = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+                info.SetLabel(classname+', '+classperc+'%, '+classdate+' ') 
+                errorwindow_size.Add(info, 0, wx.CENTER, 5)
+                errorwindow_size.AddSpacer(10)
+            self.listdel = listdel
+            errorwindow_size.AddSpacer(20)
+            box = wx.BoxSizer(wx.HORIZONTAL)
+            abort_button = wx.Button(panel, label='No, abort')
+            abort_button.Bind(wx.EVT_BUTTON, self.closepress)
+            box.Add(abort_button)
+            procede_button = wx.Button(panel, label='Yes, procede')
+            procede_button.Bind(wx.EVT_BUTTON, self.procede)
+            box.Add(procede_button,wx.RIGHT|wx.BOTTOM)
+            errorwindow_size.Add(box,flag=wx.ALIGN_CENTRE|wx.CENTRE)
+            panel.SetSizer(errorwindow_size)
+            self.Show()
+            
+        def closepress(self, event,):
+            self.Close()
+        def procede(self, event):
+            parentframe.delclassreload()
+            oldsave = open('./save/saved.text','r')
+            oldlines = oldsave.read().splitlines()
+            oldsave.close()
+            deletes = []
+            for line in oldlines:
+                classname = line.split(',')[0]
+                target = line.split(',')[1]
+                date = line.split(',')[2]
+                current = [classname,target,date]
+                if current in self.listdel:
+                    deletes.append(line)
+            for del_line in deletes:
+                #print(oldlines)
+                #print('removing: ',del_line)
+                oldlines.remove(del_line)
+            newsave = open('./save/saved.text', 'w+')
+            for line in oldlines:
+                #print('writing: ',line)
+                newsave.write(line+'\n')
+            newsave.close()
+            self.Close()
+    DeleteWarningWindow()
 
 def AddClassWindow(parentframe):
     """
