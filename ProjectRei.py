@@ -169,10 +169,9 @@ class MainMenu(wx.Frame):
 
     def deleteselected(self, event):
         if len(self.deleteoredit) > 0:
-            print('call function to delete: ',self.deleteoredit) # need to write function to delete/edit selected class
+            #print('call function to delete: ',self.deleteoredit) # need to write function to delete/edit selected class
             WindowSize = (475,140+len(self.deleteoredit)*25)
             DeleteWarning(self.deleteoredit,WindowSize,self)
-            wx.Yield()
         else:
             WarningPopup('Nothing selected!','Please select the classes you wish to delete.',(450,100),self)
 
