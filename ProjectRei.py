@@ -173,14 +173,14 @@ class MainMenu(wx.Frame):
             WindowSize = (475,140+len(self.deleteoredit)*25)
             DeleteWarning(self.deleteoredit,WindowSize,self)
         else:
-            WarningPopup('Nothing selected!','Please select the classes you wish to delete.',(450,100),self)
+            WarningPopup('Nothing selected!','Please select the classes you wish to delete. ',(475,100),self)
 
     def editselected(self, event):
         if len(self.deleteoredit) > 0:
             print('call function to edit: ',self.deleteoredit) # need to write function to delete/edit selected class
             wx.Yield()
         else:
-            WarningPopup('Nothing selected!','Please select the classes you wish to edit.',(450,100),self)
+            WarningPopup('Nothing selected!','Please select the classes you wish to edit. ',(475,100),self)
 
     def start_press(self, event): # add class, calls AddClassWindow, which opens a pop up
         #inputpath = self.text_ctrl.GetValue()
