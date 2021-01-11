@@ -546,7 +546,7 @@ def AddClassWindow(parentframe):
             leaveempty = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
             leaveempty.SetLabel('If you have other marks, enter them here\nPlease leave unneeded boxes blank ')
             self.scrollsizer.Add(leaveempty, 0, wx.UP | wx.CENTER, 15)
-            self.scrollsizer.AddSpacer(5)
+            self.scrollsizer.AddSpacer(8)
             Misc1 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
             Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score ')
             self.scrollsizer.Add(Misc1, 0, wx.UP | wx.CENTER, 15)
@@ -563,7 +563,7 @@ def AddClassWindow(parentframe):
             self.text_misc22 = wx.TextCtrl(self.scrollingclasses)
             self.scrollsizer.Add(self.text_misc21, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.Add(self.text_misc22, 0, wx.UP | wx.CENTER, 10)
-            self.scrollsizer.AddSpacer(15)
+            self.scrollsizer.AddSpacer(5)
             #
 
             self.scrollingclasses.SetSizer(self.scrollsizer)
