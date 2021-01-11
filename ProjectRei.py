@@ -9,6 +9,8 @@ DEVELOPED_BY_SHOMA = 'Easy A 2021 (c) was developed by:\nShoma Yamanouchi,\nBria
 import os, sys, wx, csv, wx.adv
 import wx.lib.scrolledpanel as scrolled
 from wx.lib.colourdb import *
+import datetime as dt
+from icalendar import Calendar, Event
 
 class MainMenu(wx.Frame):
     #main panel constructor
@@ -251,6 +253,7 @@ class MainMenu(wx.Frame):
         self.Refresh()
         self.Update()
         self.Show()
+        AddCalWindowFunc(self.addedclass,self)
 
     def delclassreload(self): # function called by OTHER frames to reload this page
         #print('(test) Deleted class is: ',self.deleteoredit)
@@ -296,6 +299,7 @@ class MainMenu(wx.Frame):
         self.Show()
 
     def QuitAll(self, event):
+        os.system('rm ./save/*.ics')
         wx.Exit()
         
 
@@ -324,6 +328,69 @@ def WarningPopup(Title,Text,WindowSize,parentframe): # Generic warning popup win
         def closepress(self, event):
             self.Close()
     WarningWindow()
+
+def AddCalWindowFunc(addedclass,parentframe): # Generic warning popup window
+    """
+    :type listdel: List
+    :type WindowSize: tuple
+    :type parentframe: wx.Frame
+    :rtype: None
+    """
+    class AddCalWindow(wx.Frame):
+        def __init__(self):
+            super(AddCalWindow, self).__init__(parent=parentframe, title='Deleting entries',size=(450,230))
+            panel = wx.Panel(self)
+
+            self.addedclass = addedclass
+            classname,classperc,classdate = self.addedclass[0],self.addedclass[1],self.addedclass[2]
+
+            errorwindow_size = wx.BoxSizer(wx.VERTICAL)
+
+            ExamAdded = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+            ExamAdded.SetLabel('Exam for '+classname+' is on '+classdate+'.\n\nYour goal is '+classperc+'%.\n\nGood luck!\n') # e.g., 'Missing value for Midterm'
+            errorwindow_size.Add(ExamAdded, 0, wx.ALL | wx.CENTER, 15)
+
+            errorwindow_size.AddSpacer(5)
+
+            addcal = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+            addcal.SetLabel('Would you like to add this exam to your calendar?') 
+            errorwindow_size.Add(addcal, 0, wx.CENTER, 5)
+
+            errorwindow_size.AddSpacer(15)
+            box = wx.BoxSizer(wx.HORIZONTAL)
+            abort_button = wx.Button(panel, label='No')
+            abort_button.Bind(wx.EVT_BUTTON, self.closepress)
+            box.Add(abort_button)
+            procede_button = wx.Button(panel, label='Yes')
+            procede_button.Bind(wx.EVT_BUTTON, self.procede)
+            box.Add(procede_button,wx.RIGHT|wx.BOTTOM)
+            errorwindow_size.Add(box,flag=wx.ALIGN_CENTRE|wx.CENTRE)
+            panel.SetSizer(errorwindow_size)
+            self.Show()
+            
+        def closepress(self, event):
+            self.Close()
+        def procede(self, event):
+            def write_ical(newexam):#newexam = classname, target, date
+                # write iCal
+                cal = Calendar()
+                event = Event()
+                examdate = dt.datetime.strptime(newexam[2] + ' 08:00','%Y/%m/%d %H:%M')
+                event.add('summary', newexam[0]+' Exam')
+                event.add('dtstart', examdate)
+                event.add('dtend', examdate + dt.timedelta(hours=3))
+                event.add('description','Final exam for '+newexam[0]+'.\nYour goal is '+newexam[1]+'%!\nGood luck!')
+                #event.add('location', newexam)
+                cal.add_component(event)
+
+                with open('./save/'+newexam[0]+'_'+newexam[2].replace('/','-')+'.ics', 'wb') as ics:
+                    ics.write(cal.to_ical()) 
+                os.system('open ./save/'+newexam[0]+'_'+newexam[2].replace('/','-')+'.ics')
+                #os.system('rm ./save/'+newexam[0]+'_'+newexam[2].replace('/','-')+'.ics')
+            write_ical(self.addedclass)
+            self.Close()
+    AddCalWindow()
+
 
 def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup window
     """
@@ -359,7 +426,7 @@ def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup windo
             panel.SetSizer(errorwindow_size)
             self.Show()
             
-        def closepress(self, event,):
+        def closepress(self, event):
             self.Close()
         def procede(self, event):
             parentframe.delclassreload()
@@ -554,8 +621,8 @@ if __name__ == '__main__':
     else:
         #savefile = open('./save/saved.text','w+') # read previously inputted data (if available)
         existingfile = False
+    os.system('rm ./save/*.ics')
     wx.AppConsole.SetAppName(app,AppName)
     wx.AppConsole.SetAppDisplayName(app,AppName)
     frame = MainMenu()
     app.MainLoop()
-
