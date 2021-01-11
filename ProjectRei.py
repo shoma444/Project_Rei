@@ -157,7 +157,9 @@ class MainMenu(wx.Frame):
         cb = event.GetEventObject()
         if cb.GetValue():
             classname = cb.GetLabel().split(':')[0][1:] # get the name of class from label 
-            self.deleteoredit.append(classname)
+            classperc = cb.GetLabel().split(':')[1][1:].split('%')[0]
+            classdate = cb.GetLabel().split('%')[1][-11:]
+            self.deleteoredit.append([classname,classperc,classdate[:-1]])
 
     def deleteselected(self, event):
         if len(self.deleteoredit) > 0:
