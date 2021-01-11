@@ -188,9 +188,11 @@ class MainMenu(wx.Frame):
 
     def newclassreload(self): # function called by OTHER frames to reload this page
         #print('(test) Added class is: ',self.addedclass)
-        
         self.deleteoredit = []
-
+        savefile = open('./save/saved.text','r') # read previously inputted data (if available)
+        savedata = savefile.read().splitlines()
+        existingfile = True
+        savefile.close()
         self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
         self.scrollingclasses2.SetAutoLayout(1)
         self.scrollingclasses2.SetupScrolling()
@@ -253,7 +255,10 @@ class MainMenu(wx.Frame):
     def delclassreload(self): # function called by OTHER frames to reload this page
         #print('(test) Deleted class is: ',self.deleteoredit)
         self.deleteoredit_old = self.deleteoredit
-        
+        savefile = open('./save/saved.text','r') # read previously inputted data (if available)
+        savedata = savefile.read().splitlines()
+        existingfile = True
+        savefile.close()
         self.deleteoredit = []
 
         self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
