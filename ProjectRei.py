@@ -527,22 +527,6 @@ def AddClassWindow(parentframe):
             self.scrollsizer.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.AddSpacer(5)
 
-            #Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
-            #arget.SetLabel('Final exam weight (0-100%) and your target course %')
-            #window_size.Add(Target, 0, wx.UP | wx.CENTER, 15)
-            #self.text_ctrl4 = wx.TextCtrl(panel)
-            #self.text_ctrl41 = wx.TextCtrl(panel)
-            #window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
-            #window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
-            Target = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Target.SetLabel('Final exam weight (0-100%) and your target course % ')
-            self.scrollsizer.Add(Target, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl4 = wx.TextCtrl(self.scrollingclasses)
-            self.text_ctrl41 = wx.TextCtrl(self.scrollingclasses)
-            self.scrollsizer.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 10)
-            self.scrollsizer.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 10)
-            self.scrollsizer.AddSpacer(5)
-
             # Add Misc Grades 1, 2 here
             Misc1 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
             Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score ')
@@ -561,8 +545,29 @@ def AddClassWindow(parentframe):
             self.scrollsizer.Add(self.text_misc21, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.Add(self.text_misc22, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.AddSpacer(5)
-            #######
+            ##
+
+            #Target = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
+            #arget.SetLabel('Final exam weight (0-100%) and your target course %')
+            #window_size.Add(Target, 0, wx.UP | wx.CENTER, 15)
+            #self.text_ctrl4 = wx.TextCtrl(panel)
+            #self.text_ctrl41 = wx.TextCtrl(panel)
+            #window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
+            #window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
+            Target = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            Target.SetLabel('Final exam weight (0-100%) and your target course % ')
+            self.scrollsizer.Add(Target, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl4 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl41 = wx.TextCtrl(self.scrollingclasses)
+            self.scrollsizer.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(15)
              
+            leaveempty = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            leaveempty.SetLabel('Please leave unneeded boxes blank ')
+            self.scrollsizer.Add(leaveempty, 0, wx.UP | wx.CENTER, 15)
+            self.scrollsizer.AddSpacer(5)
+
             self.scrollingclasses.SetSizer(self.scrollsizer)
             self.scrollingclasses.Layout()
             self.classlistpos = window_size.GetPosition()
