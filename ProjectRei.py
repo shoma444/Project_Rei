@@ -121,7 +121,7 @@ class MainMenu(wx.Frame):
     def menuquit(self,Event):
         self.Destroy()
     def OnAbout(self, event):
-        dlg = wx.MessageDialog(self, "Easy A\nVersion: "+version+"\nBy Shoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n",
+        dlg = wx.MessageDialog(self, "Easy A\nVersion: "+version+"\nBy Shoma Yamanouchi,\n   Brian J. Park,\n   Hannah Cheng\n",
                                 "About Me", wx.CENTER | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
