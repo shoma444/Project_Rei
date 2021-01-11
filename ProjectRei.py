@@ -242,6 +242,7 @@ class MainMenu(wx.Frame):
 
         self.sizer.Replace(self.scrollingclasses, self.scrollingclasses2)
         self.scrollingclasses.Destroy()
+        self.scrollingclasses = self.scrollingclasses2
         #self.sizer.Add(self.scrollingclasses2, 1, wx.EXPAND)
 
         self.sizer.Layout()
@@ -281,6 +282,7 @@ class MainMenu(wx.Frame):
 
         self.sizer.Replace(self.scrollingclasses, self.scrollingclasses2)
         self.scrollingclasses.Destroy()
+        self.scrollingclasses = self.scrollingclasses2
         #self.sizer.Add(self.scrollingclasses2, 1, wx.EXPAND)
 
         self.sizer.Layout()
@@ -382,7 +384,6 @@ def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup windo
 def AddClassWindow(parentframe):
     """
     :type parentframe: wx.Frame
-    :rtype: dict classinfo (False if closed)
     """
     parent = parentframe
     class AddClassWindow(wx.Frame):
@@ -433,7 +434,7 @@ def AddClassWindow(parentframe):
             ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
             ExamDate.SetLabel('Final exam date')
             window_size.Add(ExamDate, 0, wx.UP | wx.CENTER, 15)
-            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT,dt=wx.DateTime.Now())
+            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT,dt=wx.DateTime.Now())#wx.adv.DatePickerCtrl
             window_size.Add(self.text_ctrl5, 0, wx.UP | wx.CENTER, 15)
 
             window_size.AddSpacer(60)
@@ -482,7 +483,7 @@ def AddClassWindow(parentframe):
             #initiate loop
             for i, j in self.classinfo.items():
                 if isinstance(j, str) != True:
-                    if i != 'Target':
+                    if i != 'Target' and i != 'classname':
                         if turn == 0:
                             mark = float(j[1])*(0.01*float(j[0]))
                         if turn != 0:
@@ -491,20 +492,28 @@ def AddClassWindow(parentframe):
                             #summing up marks over loop
                         turn +=1
                     if i == 'Target':
-                        target_mark = float(j[1]) - mark
-                        #percentage of mark required to hit threshold
-                        mark_reqd = (target_mark / float(j[0]))*100
-                        #percentage out of 100 required on exam
+                        pass
+                """
                 if isinstance(j, str) == True:
                     if i == 'classname':
                         my_course = j
                     if i == 'Date':
                     	exam_date = j
-
+                """
+            for i, j in self.classinfo.items():
+                if isinstance(j, str) != True:
+                    if i == 'Target':
+                        target_mark = float(j[1]) - mark
+                        #percentage of mark required to hit threshold
+                        mark_reqd = (target_mark / float(j[0]))*100
+                        #percentage out of 100 required on exam
+                    else: pass
+            my_course = self.classinfo['classname']
+            exam_date = self.classinfo['Date']
             my_course = my_course.upper() # make classname uppercase
             parent.addedclass = [my_course,str(int(mark_reqd)),exam_date]
             parent.newclassreload()
-            """ 
+            
 
             ### Currently commented out so that the saved txt ###
             ### file does not become filled up during testing ###
@@ -516,7 +525,7 @@ def AddClassWindow(parentframe):
             #saved.write(my_course + ',' + '{:.1f}'.format(mark_reqd) + ',' + exam_date + '\n') # if writing as float (1 decimal prec)
             saved.write(my_course + ',' + str(int(mark_reqd)) + ',' + exam_date + '\n') # if writing as float (1 decimal prec)
             saved.close()
-            """
+            
             #print(my_course,mark_reqd,exam_date)
             #print(my_course,str(int(mark_reqd)),exam_date)
             self.Close()
