@@ -542,11 +542,13 @@ def AddClassWindow(parentframe):
             self.scrollsizer.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.AddSpacer(10)
+
             # Add Misc Grades 1, 2 here
             leaveempty = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
             leaveempty.SetLabel('If you have other marks, enter them here\nPlease leave unneeded boxes blank ')
             self.scrollsizer.Add(leaveempty, 0, wx.UP | wx.CENTER, 15)
             self.scrollsizer.AddSpacer(8)
+
             Misc1 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
             Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score ')
             self.scrollsizer.Add(Misc1, 0, wx.UP | wx.CENTER, 15)
@@ -612,7 +614,7 @@ def AddClassWindow(parentframe):
             Midtermscore = self.text_ctrl31.GetValue()
             self.classinfo['Midterm'] = (Midtermweight,Midtermscore)
 
-            ### Get Misc Grades 1 & 2 values here (text_misc11,text_misc12) and (text_misc21,text_misc22)
+         
 
             Finalweight = self.text_ctrl4.GetValue()
             Targetscore = self.text_ctrl41.GetValue()
@@ -622,6 +624,22 @@ def AddClassWindow(parentframe):
             self.classinfo['Date'] = date.Format('%Y/%m/%d')
             #parent.addedclass = self.classinfo
             #print(self.classinfo)
+
+            Misc1weight = self.text_misc11.GetValue()
+            Misc1score = self.text_misc12.GetValue()
+            self.classinfo['Misc_1'] = (Misc1weight, Misc1score)
+
+            Misc2weight = self.text_misc21.GetValue()
+            Misc2score = self.text_misc22.GetValue()
+            self.classinfo['Misc_2'] = (Misc2weight, Misc2score)
+
+            for i,j in self.classinfo.items():
+                if j[0] == '' or j[1] == '':
+                    self.classinfo[i] = ('0', '0')
+
+            #replacing empty fields with zeroes
+
+
 
             turn = 0
             #initiate loop
@@ -644,6 +662,7 @@ def AddClassWindow(parentframe):
                     if i == 'Date':
                     	exam_date = j
                 """
+
             for i, j in self.classinfo.items():
                 if isinstance(j, str) != True:
                     if i == 'Target':
@@ -651,7 +670,7 @@ def AddClassWindow(parentframe):
                         #percentage of mark required to hit threshold
                         mark_reqd = (target_mark / float(j[0]))*100
                         #percentage out of 100 required on exam
-                    else: pass
+               
             my_course = self.classinfo['classname']
             exam_date = self.classinfo['Date']
             my_course = my_course.upper() # make classname uppercase
