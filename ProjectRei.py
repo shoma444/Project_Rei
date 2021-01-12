@@ -6,7 +6,7 @@
 version = '1.0'
 DEVELOPED_BY_SHOMA = 'Easy A 2021 (c) was developed by:\nShoma Yamanouchi,\nBrian J. Park,\nand Hannah Cheng'
 
-import os, sys, wx, csv, wx.adv
+import os, sys, wx, csv, wx.adv, pickle, random
 import wx.lib.scrolledpanel as scrolled
 from wx.lib.colourdb import *
 import datetime as dt
@@ -59,7 +59,9 @@ class MainMenu(wx.Frame):
         self.sizer.Add(self.Header, 0, wx.RIGHT | wx.LEFT, 20)
 
         self.deleteoredit = []
+        self.deleteoredithash = []
         self.addedclass = []
+        self.savedhashkeys = [] # list of hash keys
         self.scrollingclasses = scrolled.ScrolledPanel(self.panel,size=(400,100))
         self.classlistpos = self.scrollingclasses.GetPosition()
         self.scrollingclasses.SetAutoLayout(1)
@@ -68,12 +70,14 @@ class MainMenu(wx.Frame):
         if existingfile:
             try:
                 for i,row in enumerate(savedata):
+                    self.savedhashkeys.append(row.split(',')[3]) # read in hash key
                     classname = row.split(',')[0]
                     target = row.split(',')[1]
                     date = row.split(',')[2]
                     # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
                     # Grades.SetFont(Header_font)
                     inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
+                    print(inputs)
                     self.cb = wx.CheckBox(self.scrollingclasses, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
                     self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
                     self.scrollsizer.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
@@ -83,8 +87,11 @@ class MainMenu(wx.Frame):
                 self.sizer.Add(self.scrollingclasses, 1, wx.EXPAND)
             except: pass
         else:
-            self.cb = wx.StaticText('No classes added yet.')
-            self.scrollsizer.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
+            save_obj({},hashedinfo)
+            self.initmsg = 'No classes added yet.\nYou can add your exams\nby clicking Add Class. '
+            self.cb = wx.StaticText(self.scrollingclasses)
+            self.cb.SetLabel(self.initmsg)
+            self.scrollsizer.Add(self.cb, 1, wx.ALL | wx.EXPAND, 25)#menu_sizer.Add(self.cb)
             self.scrollingclasses.SetSizer(self.scrollsizer)
             self.scrollingclasses.Layout()
             self.classlistpos = self.sizer.GetPosition()
@@ -179,8 +186,19 @@ class MainMenu(wx.Frame):
 
     def editselected(self, event):
         if len(self.deleteoredit) > 0:
-            print('call function to edit: ',self.deleteoredit) # need to write function to delete/edit selected class
-            wx.Yield()
+            oldsave = open('./save/saved.text','r')
+            oldlines = oldsave.read().splitlines()
+            oldsave.close()
+            deletes = []
+            for line in oldlines:
+                classname = line.split(',')[0]
+                target = line.split(',')[1]
+                date = line.split(',')[2]
+                current = [classname,target,date]
+                if current in self.deleteoredit:
+                    class2edit = current
+                    editkey = line.split(',')[3]
+                    EditClassWindowFunc(class2edit,editkey,self)
         else:
             WarningPopup('Nothing selected!','Please select the classes you wish to edit. ',(475,100),self)
 
@@ -240,6 +258,62 @@ class MainMenu(wx.Frame):
             self.scrollsizer2.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb) 
             self.scrollingclasses2.SetSizer(self.scrollsizer2)
             self.scrollingclasses2.Layout()
+
+        self.scrollingclasses2.Refresh()
+        self.scrollingclasses2.Update()
+        self.scrollingclasses2.Show()
+
+        self.sizer.Replace(self.scrollingclasses, self.scrollingclasses2)
+        self.scrollingclasses.Destroy()
+        self.scrollingclasses = self.scrollingclasses2
+        #self.sizer.Add(self.scrollingclasses2, 1, wx.EXPAND)
+
+        self.sizer.Layout()
+        self.Refresh()
+        self.Update()
+        self.Show()
+        AddCalWindowFunc(self.addedclass,self)
+    def editclassreload(self):
+        #print('(test) Deleted class is: ',self.deleteoredit)
+        self.deleteoredit_old = self.deleteoredit
+        savefile = open('./save/saved.text','r') # read previously inputted data (if available)
+        savedata = savefile.read().splitlines()
+        existingfile = True
+        savefile.close()
+        self.deleteoredit = []
+        ### delete deleted entries from hash
+        currentsavedhash = load_obj(hashedinfo) # load saved hash
+        for delkey in self.deleteoredithash: # loop through keys to delete
+            del currentsavedhash[delkey]
+        save_obj(currentsavedhash, hashedinfo) # save updated hashload hash
+
+        self.scrollingclasses2 = scrolled.ScrolledPanel(self.panel,pos=self.classlistpos,size=(400,100)) # pos=self.classlistpos
+        self.scrollingclasses2.SetAutoLayout(1)
+        self.scrollingclasses2.SetupScrolling()
+        self.scrollsizer2 = wx.BoxSizer(wx.VERTICAL)
+
+        for i,row in enumerate(savedata):
+            classname = row.split(',')[0]
+            target = row.split(',')[1]
+            date = row.split(',')[2]
+            current = [classname,target,date]
+            if i != self.edittedidx:
+                # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
+                # Grades.SetFont(Header_font)
+                inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
+                self.cb = wx.CheckBox(self.scrollingclasses2, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
+                self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
+                self.scrollsizer2.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
+                self.scrollingclasses2.SetSizer(self.scrollsizer2)
+                self.scrollingclasses2.Layout()
+            elif i == self.edittedidx:
+                inputs = ' ' + self.addedclass[0] + ':\t' + self.addedclass[1] + '% \t' + self.addedclass[2] + '\n'
+                self.cb = wx.CheckBox(self.scrollingclasses2, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
+                self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
+                self.scrollsizer2.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
+                self.scrollingclasses2.SetSizer(self.scrollsizer2)
+                self.scrollingclasses2.Layout()
+
         self.scrollingclasses2.Refresh()
         self.scrollingclasses2.Update()
         self.scrollingclasses2.Show()
@@ -434,6 +508,7 @@ def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup windo
             oldlines = oldsave.read().splitlines()
             oldsave.close()
             deletes = []
+            self.deleteoredithash = []
             for line in oldlines:
                 classname = line.split(',')[0]
                 target = line.split(',')[1]
@@ -441,10 +516,16 @@ def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup windo
                 current = [classname,target,date]
                 if current in self.listdel:
                     deletes.append(line)
+                    self.deleteoredithash.append(line.split(',')[3])
             for del_line in deletes:
                 #print(oldlines)
                 #print('removing: ',del_line)
                 oldlines.remove(del_line)
+            ### delete deleted entries from hash
+            currentsavedhash = load_obj(hashedinfo) # load saved hash
+            for delkey in self.deleteoredithash: # loop through keys to delete
+                del currentsavedhash[int(delkey)]
+            save_obj(currentsavedhash, hashedinfo) # save updated hashload hash
             newsave = open('./save/saved.text', 'w+')
             for line in oldlines:
                 #print('writing: ',line)
@@ -452,6 +533,252 @@ def DeleteWarning(listdel,WindowSize,parentframe): # Generic warning popup windo
             newsave.close()
             self.Close()
     DeleteWarningWindow()
+
+def EditClassWindowFunc(class2edit,editkey,parentframe):
+    """
+    :type parentframe: wx.Frame
+    """
+    parent = parentframe
+    class EditClassWindow(wx.Frame):
+        def __init__(self):
+            super(EditClassWindow, self).__init__(parent=parentframe, title='Adding a class',size=(375, 700))#(400, 400)
+            panel = wx.Panel(self)
+            window_size = wx.BoxSizer(wx.VERTICAL)
+            self.classinfo = dict()
+            self.editkey = editkey
+            currentsavedhash = load_obj(hashedinfo) # load saved hash
+            self.currentsavedhashFULL = currentsavedhash
+            currentsavedhash = currentsavedhash[int(editkey)]
+            Name = wx.StaticText(panel, -1, style = wx.ALIGN_CENTRE)
+            Name.SetLabel('Class Name')
+            window_size.Add(Name, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl = wx.TextCtrl(panel)
+
+            self.text_ctrl.SetValue(currentsavedhash['classname']) # set previous value as default
+            window_size.Add(self.text_ctrl, 0, wx.UP | wx.CENTER, 15)
+            window_size.AddSpacer(10)
+
+            self.scrollingclasses = scrolled.ScrolledPanel(panel,size=(300,575))
+            self.scrollingclasses.SetAutoLayout(1)
+            self.scrollingclasses.SetupScrolling()
+            self.scrollsizer = wx.BoxSizer(wx.VERTICAL)
+
+            self.scrollsizer.AddSpacer(5)
+            Quiz = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
+            Quiz.SetLabel('Quiz weight (0-100%) and your score ')
+            self.scrollsizer.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl1 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl1.SetValue(currentsavedhash['quiz'][0]) # set previous value as default
+            self.text_ctrl11 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl11.SetValue(currentsavedhash['quiz'][1]) # set previous value as default
+            self.scrollsizer.Add(self.text_ctrl1, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_ctrl11, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(10)
+
+            Assignment = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
+            Assignment.SetLabel('Assignment weight (0-100%) and your score ')
+            self.scrollsizer.Add(Assignment, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl2 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl2.SetValue(currentsavedhash['Assignment'][0]) # set previous value as default
+            self.text_ctrl21 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl21.SetValue(currentsavedhash['Assignment'][1]) # set previous value as default
+            self.scrollsizer.Add(self.text_ctrl2, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_ctrl21, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(5)
+
+            Midterm = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
+            Midterm.SetLabel('Midterm weight (0-100%) and your score ')
+            self.scrollsizer.Add(Midterm, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl3 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl3.SetValue(currentsavedhash['Midterm'][0]) # set previous value as default
+            self.text_ctrl31 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl31.SetValue(currentsavedhash['Midterm'][1]) # set previous value as default
+            self.scrollsizer.Add(self.text_ctrl3, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(5)
+
+            Target = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            Target.SetLabel('Final exam weight (0-100%) and your target course % ')
+            self.scrollsizer.Add(Target, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl4 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl4.SetValue(currentsavedhash['Target'][0]) # set previous value as default
+            self.text_ctrl41 = wx.TextCtrl(self.scrollingclasses)
+            self.text_ctrl41.SetValue(currentsavedhash['Target'][1]) # set previous value as default
+            self.scrollsizer.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(10)
+
+            # Add Misc Grades 1, 2 here
+            leaveempty = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            leaveempty.SetLabel('If you have other marks, enter them here\nPlease leave unneeded boxes blank ')
+            self.scrollsizer.Add(leaveempty, 0, wx.UP | wx.CENTER, 15)
+            self.scrollsizer.AddSpacer(8)
+
+            Misc1 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score ')
+            self.scrollsizer.Add(Misc1, 0, wx.UP | wx.CENTER, 15)
+            self.text_misc11 = wx.TextCtrl(self.scrollingclasses)
+            self.text_misc11.SetValue(currentsavedhash['Misc_1'][0]) # set previous value as default
+            self.text_misc12 = wx.TextCtrl(self.scrollingclasses)
+            self.text_misc12.SetValue(currentsavedhash['Misc_1'][1]) # set previous value as default
+            self.scrollsizer.Add(self.text_misc11, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_misc12, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(5)
+
+            Misc2 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            Misc2.SetLabel('Misc. grades (2), weight (0-100%) and your score ')
+            self.scrollsizer.Add(Misc2, 0, wx.UP | wx.CENTER, 15)
+            self.text_misc21 = wx.TextCtrl(self.scrollingclasses)
+            self.text_misc21.SetValue(currentsavedhash['Misc_2'][0]) # set previous value as default
+            self.text_misc22 = wx.TextCtrl(self.scrollingclasses)
+            self.text_misc22.SetValue(currentsavedhash['Misc_2'][1]) # set previous value as default
+            self.scrollsizer.Add(self.text_misc21, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.Add(self.text_misc22, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(5)
+            #
+
+            self.scrollingclasses.SetSizer(self.scrollsizer)
+            self.scrollingclasses.Layout()
+            self.classlistpos = window_size.GetPosition()
+            window_size.Add(self.scrollingclasses, 1, wx.EXPAND)
+
+
+            currentexamdate = currentsavedhash['Date']
+            currentexamdate = wx.DateTime.FromDMY(int(currentexamdate.split('/')[2]),int(currentexamdate.split('/')[1])-1,int(currentexamdate.split('/')[0]))
+
+            ExamDate = wx.StaticText(panel, -1, style=wx.ALIGN_CENTRE)
+            ExamDate.SetLabel('Final exam date')
+            window_size.Add(ExamDate, 0, wx.UP | wx.CENTER, 15)
+            self.text_ctrl5 = wx.adv.DatePickerCtrl(panel,style=wx.adv.DP_DEFAULT,dt=currentexamdate)#wx.adv.DatePickerCtrl
+            window_size.Add(self.text_ctrl5, 0, wx.UP | wx.CENTER, 15)
+
+            window_size.AddSpacer(30)
+            add_button = wx.Button(panel, label='Add')
+            add_button.Bind(wx.EVT_BUTTON, self.addpress)
+            window_size.Add(add_button, 0, wx.UP | wx.CENTER, 0)
+            panel.SetSizer(window_size)
+            window_size.AddSpacer(5)
+
+            close_button = wx.Button(panel, label='Close')
+            close_button.Bind(wx.EVT_BUTTON, self.closepress)
+            window_size.Add(close_button, 0, wx.UP | wx.CENTER, 0)
+            window_size.AddSpacer(25)
+            panel.SetSizer(window_size)
+            self.Show()
+            
+        def closepress(self, event):
+            self.Close()
+            return False
+
+        def addpress(self, event):
+            classname = self.text_ctrl.GetValue()
+            self.classinfo['classname'] = classname 
+
+            quizweight = self.text_ctrl1.GetValue()
+            quizscore = self.text_ctrl11.GetValue()
+            self.classinfo['quiz'] = (quizweight,quizscore)
+
+            Assignmentweight = self.text_ctrl2.GetValue()
+            Assignmentscore = self.text_ctrl21.GetValue()
+            self.classinfo['Assignment'] = (Assignmentweight,Assignmentscore)
+
+            Midtermweight = self.text_ctrl3.GetValue()
+            Midtermscore = self.text_ctrl31.GetValue()
+            self.classinfo['Midterm'] = (Midtermweight,Midtermscore)
+
+         
+
+            Finalweight = self.text_ctrl4.GetValue()
+            Targetscore = self.text_ctrl41.GetValue()
+            self.classinfo['Target'] = (Finalweight, Targetscore)
+
+            date = self.text_ctrl5.GetValue()
+            self.classinfo['Date'] = date.Format('%Y/%m/%d')
+            #parent.addedclass = self.classinfo
+            #print(self.classinfo)
+
+            Misc1weight = self.text_misc11.GetValue()
+            Misc1score = self.text_misc12.GetValue()
+            self.classinfo['Misc_1'] = (Misc1weight, Misc1score)
+
+            Misc2weight = self.text_misc21.GetValue()
+            Misc2score = self.text_misc22.GetValue()
+            self.classinfo['Misc_2'] = (Misc2weight, Misc2score)
+
+            for i,j in self.classinfo.items():
+                if j[0] == '' or j[1] == '':
+                    self.classinfo[i] = ('0', '0')
+
+            #replacing empty fields with zeroes
+
+            turn = 0
+            #initiate loop
+            for i, j in self.classinfo.items():
+                if isinstance(j, str) != True:
+                    if i != 'Target' and i != 'classname':
+                        if turn == 0:
+                            mark = float(j[1])*(0.01*float(j[0]))
+                        if turn != 0:
+                            mark1 = float(j[1])*(0.01*float(j[0]))
+                            mark = mark1 + mark
+                            #summing up marks over loop
+                        turn +=1
+                    if i == 'Target':
+                        pass
+                """
+                if isinstance(j, str) == True:
+                    if i == 'classname':
+                        my_course = j
+                    if i == 'Date':
+                    	exam_date = j
+                """
+
+            for i, j in self.classinfo.items():
+                if isinstance(j, str) != True:
+                    if i == 'Target':
+                        target_mark = float(j[1]) - mark
+                        #percentage of mark required to hit threshold
+                        mark_reqd = (target_mark / float(j[0]))*100
+                        #percentage out of 100 required on exam
+               
+            my_course = self.classinfo['classname']
+            exam_date = self.classinfo['Date']
+            my_course = my_course.upper() # make classname uppercase
+            parent.addedclass = [my_course,str(int(mark_reqd)),exam_date]
+
+
+            del self.currentsavedhashFULL[int(self.editkey)] # delete old hashed data
+            self.currentsavedhashFULL[int(self.editkey)] = self.classinfo # add data hash to hash
+            save_obj(self.currentsavedhashFULL, hashedinfo) # save updated hash
+
+            oldsave = open('./save/saved.text','r')
+            oldlines = oldsave.read().splitlines()
+            oldsave.close()
+            deletes = []
+            for i, line in enumerate(oldlines):
+                classname = line.split(',')[0]
+                target = line.split(',')[1]
+                date = line.split(',')[2]
+                current = [classname,target,date]
+                if current == class2edit:
+                    parent.edittedidx = i
+                    oldlines.remove(line)
+                    newline = my_course + ',' + str(int(mark_reqd)) + ',' + exam_date + ',' + str(self.editkey)
+                    oldlines.insert(i,newline)
+                else: pass
+            parent.editclassreload()
+            newsave = open('./save/saved.text', 'w+')
+            for line in oldlines:
+                newsave.write(line+'\n')
+            newsave.close()
+            
+            #print(my_course,mark_reqd,exam_date)
+            #print(my_course,str(int(mark_reqd)),exam_date)
+            self.Close()
+            #return mark_reqd
+            #return my_course
+            #return exam_date
+    EditClassWindow()
 
 def AddClassWindow(parentframe):
     """
@@ -675,8 +1002,15 @@ def AddClassWindow(parentframe):
             exam_date = self.classinfo['Date']
             my_course = my_course.upper() # make classname uppercase
             parent.addedclass = [my_course,str(int(mark_reqd)),exam_date]
+            parent.classinfo = self.classinfo
             parent.newclassreload()
-            
+
+            # create new key, add to existing list of keys, and append the saved hash
+            newkey4newclass = make_hash_key(parent.savedhashkeys) # new key
+            parent.savedhashkeys.append(newkey4newclass) # append to list of keys
+            currentsavedhash = load_obj(hashedinfo) # load saved hash
+            currentsavedhash[newkey4newclass] = self.classinfo # add data hash to hash
+            save_obj(currentsavedhash, hashedinfo) # save updated hash
 
             ### Currently commented out so that the saved txt ###
             ### file does not become filled up during testing ###
@@ -686,7 +1020,7 @@ def AddClassWindow(parentframe):
             else:
                 saved = open('./save/saved.text','w+') # open new file
             #saved.write(my_course + ',' + '{:.1f}'.format(mark_reqd) + ',' + exam_date + '\n') # if writing as float (1 decimal prec)
-            saved.write(my_course + ',' + str(int(mark_reqd)) + ',' + exam_date + '\n') # if writing as float (1 decimal prec)
+            saved.write(my_course + ',' + str(int(mark_reqd)) + ',' + exam_date + ',' + str(newkey4newclass) + '\n') # if writing as float (1 decimal prec)
             saved.close()
             
             #print(my_course,mark_reqd,exam_date)
@@ -695,22 +1029,39 @@ def AddClassWindow(parentframe):
             #return mark_reqd
             #return my_course
             #return exam_date
-
-
-
     AddClassWindow()
 
+#########################################################
+""" For pickling data"""
+def save_obj(obj, name):
+    with open(name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+#########################################################
+def load_obj(name):
+    with open(name + '.pkl', 'rb') as f:
+        return pickle.load(f)
+#########################################################
+def make_hash_key(existing):
+    # creates a new, unique key
+    newkey = random.choice([x for x in range(10000,99999) if x not in existing])
+    return newkey
+#########################################################
 
 if __name__ == '__main__':
     AppName = 'Easy A' # Placeholder app name
     app = wx.App()
+    hashedinfo = './save/pickedhashtable'
     if os.path.isfile('./save/saved.text'):
         savefile = open('./save/saved.text','r') # read previously inputted data (if available)
         savedata = savefile.read().splitlines()
-        existingfile = True
         savefile.close()
+        existingfile = True
+        if len(savedata) == 0:
+            existingfile = False
+        else: existingfile = True
     else:
-        #savefile = open('./save/saved.text','w+') # read previously inputted data (if available)
+        savefile = open('./save/saved.text','w+') # read previously inputted data (if available)
+        savefile.close()
         existingfile = False
     os.system('rm ./save/*.ics')
     wx.AppConsole.SetAppName(app,AppName)
