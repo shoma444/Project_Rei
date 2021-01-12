@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 from plistlib import Plist
-plist = Plist.fromFile('Info.plist')
+plist = Plist.fromFile('./Info.plist')
 plist.update(dict(
 LSPrefersPPC=True,
 ))

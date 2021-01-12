@@ -4,7 +4,8 @@
 # version 1.0
 # Developed in Python 2.7.18
 version = '1.0'
-DEVELOPED_BY_SHOMA = 'Easy A 2021 (c) was developed by:\nShoma Yamanouchi,\nBrian J. Park,\nand Hannah Cheng'
+AppName = 'Exam Goals' # Placeholder app name
+DEVELOPED_BY_SHOMA = AppName + ' 2021 (c) was developed by:\nShoma Yamanouchi,\nBrian J. Park,\nand Hannah Cheng'
 
 import os, sys, wx, csv, wx.adv, pickle, random
 import wx.lib.scrolledpanel as scrolled
@@ -16,7 +17,7 @@ class MainMenu(wx.Frame):
     #main panel constructor
     def __init__(self):
         screensize = (400,575)
-        super(MainMenu, self).__init__(parent=None, title='Easy A',size=screensize)
+        super(MainMenu, self).__init__(parent=None, title=AppName,size=screensize)
         self.Bind(wx.EVT_ACTIVATE_APP, self.OnActivate)
         panel = wx.Panel(self)
         self.panel = panel
@@ -29,10 +30,10 @@ class MainMenu(wx.Frame):
         self.menubar = wx.MenuBar()
         wx.MenuBar.MacSetCommonMenuBar(self.menubar)
         fileMenu = wx.Menu()
-        aboutme = fileMenu.Append(wx.ID_ABOUT, '&About Easy A','Information about this program')
+        aboutme = fileMenu.Append(wx.ID_ABOUT, '&About '+AppName,'Information about this program')
         self.Bind(wx.EVT_MENU, self.OnAbout, aboutme)
         wx.App.SetMacExitMenuItemId(wx.ID_EXIT)
-        quitmenu = fileMenu.Append(wx.ID_EXIT,'Quit Easy A','Terminate this program')
+        quitmenu = fileMenu.Append(wx.ID_EXIT,'Quit '+AppName,'Terminate this program')
         self.Bind(wx.EVT_MENU, self.menuquit, quitmenu)
         self.menubar.Append(fileMenu, '|')
         self.SetMenuBar(self.menubar)
@@ -49,7 +50,7 @@ class MainMenu(wx.Frame):
         #menu_sizer.AddSpacer(0)
         self.Header_font = wx.Font(14, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
         self.Welcome = wx.StaticText(self.panel, -1, style = wx.ALIGN_LEFT)
-        self.Welcome.SetLabel('Easy A\nMain Menu\n\n')
+        self.Welcome.SetLabel(AppName+'\nMain Menu\n\n')
         self.Welcome.SetFont(self.Header_font)
         self.sizer.Add(self.Welcome, 0, wx.RIGHT | wx.LEFT, 20)
 
@@ -77,7 +78,6 @@ class MainMenu(wx.Frame):
                     # Grades = wx.StaticText(panel, -1, style = wx.ALIGN_LEFT)
                     # Grades.SetFont(Header_font)
                     inputs = ' ' + classname + ':\t' + target + '% \t' + date + '\n'
-                    print(inputs)
                     self.cb = wx.CheckBox(self.scrollingclasses, label=inputs)#self.cb = wx.CheckBox(panel, label=inputs)
                     self.Bind(wx.EVT_CHECKBOX,self.ifChecked)
                     self.scrollsizer.Add(self.cb, 0, wx.ALL | wx.RIGHT, 0)#menu_sizer.Add(self.cb)
@@ -130,7 +130,7 @@ class MainMenu(wx.Frame):
     def menuquit(self,Event):
         self.Destroy()
     def OnAbout(self, event):
-        dlg = wx.MessageDialog(self, "Easy A\nVersion: "+version+"\nDeveloped by\nShoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n",
+        dlg = wx.MessageDialog(self, AppName+"\nVersion: "+version+"\n\nDeveloped by\nShoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n",
                                 "About Me", wx.CENTER | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
@@ -554,7 +554,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             window_size.Add(Name, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl = wx.TextCtrl(panel)
 
-            self.text_ctrl.SetValue(currentsavedhash['classname']) # set previous value as default
+            self.text_ctrl.SetValue(currentsavedhash['classname'].upper()) # set previous value as default
             window_size.Add(self.text_ctrl, 0, wx.UP | wx.CENTER, 15)
             window_size.AddSpacer(10)
 
@@ -1048,7 +1048,6 @@ def make_hash_key(existing):
 #########################################################
 
 if __name__ == '__main__':
-    AppName = 'Easy A' # Placeholder app name
     app = wx.App()
     hashedinfo = './save/pickedhashtable'
     if os.path.isfile('./save/saved.text'):
