@@ -565,7 +565,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
 
             self.scrollsizer.AddSpacer(5)
             Quiz = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
-            Quiz.SetLabel('Quiz weight (0-100%) and your score ')
+            Quiz.SetLabel('Quiz weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl1 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl1.SetValue(currentsavedhash['quiz'][0]) # set previous value as default
@@ -576,7 +576,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             self.scrollsizer.AddSpacer(10)
 
             Assignment = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
-            Assignment.SetLabel('Assignment weight (0-100%) and your score ')
+            Assignment.SetLabel('Assignment weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Assignment, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl2 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl2.SetValue(currentsavedhash['Assignment'][0]) # set previous value as default
@@ -587,7 +587,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             self.scrollsizer.AddSpacer(5)
 
             Midterm = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
-            Midterm.SetLabel('Midterm weight (0-100%) and your score ')
+            Midterm.SetLabel('Midterm weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Midterm, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl3 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl3.SetValue(currentsavedhash['Midterm'][0]) # set previous value as default
@@ -598,13 +598,17 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             self.scrollsizer.AddSpacer(5)
 
             Target = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Target.SetLabel('Final exam weight (0-100%) and your target course % ')
+            Target.SetLabel('Final exam weight (0-100%) ')
             self.scrollsizer.Add(Target, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl4 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl4.SetValue(currentsavedhash['Target'][0]) # set previous value as default
+            Target2 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            Target2.SetLabel('Your target overall course grade (in %) ')
             self.text_ctrl41 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl41.SetValue(currentsavedhash['Target'][1]) # set previous value as default
             self.scrollsizer.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(5)
+            self.scrollsizer.Add(Target2, 0, wx.UP | wx.CENTER, 15)
             self.scrollsizer.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.AddSpacer(10)
 
@@ -615,7 +619,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             self.scrollsizer.AddSpacer(8)
 
             Misc1 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score ')
+            Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Misc1, 0, wx.UP | wx.CENTER, 15)
             self.text_misc11 = wx.TextCtrl(self.scrollingclasses)
             self.text_misc11.SetValue(currentsavedhash['Misc_1'][0]) # set previous value as default
@@ -626,7 +630,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             self.scrollsizer.AddSpacer(5)
 
             Misc2 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Misc2.SetLabel('Misc. grades (2), weight (0-100%) and your score ')
+            Misc2.SetLabel('Misc. grades (2), weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Misc2, 0, wx.UP | wx.CENTER, 15)
             self.text_misc21 = wx.TextCtrl(self.scrollingclasses)
             self.text_misc21.SetValue(currentsavedhash['Misc_2'][0]) # set previous value as default
@@ -814,7 +818,7 @@ def AddClassWindow(parentframe):
             #window_size.Add(self.text_ctrl11, 0, wx.UP | wx.CENTER, 15)
             self.scrollsizer.AddSpacer(5)
             Quiz = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
-            Quiz.SetLabel('Quiz weight (0-100%) and your score ')
+            Quiz.SetLabel('Quiz weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Quiz, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl1 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl11 = wx.TextCtrl(self.scrollingclasses)
@@ -830,7 +834,7 @@ def AddClassWindow(parentframe):
             #window_size.Add(self.text_ctrl2, 0, wx.UP | wx.CENTER, 15)
             #window_size.Add(self.text_ctrl21, 0, wx.UP | wx.CENTER, 15)
             Assignment = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
-            Assignment.SetLabel('Assignment weight (0-100%) and your score ')
+            Assignment.SetLabel('Assignment weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Assignment, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl2 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl21 = wx.TextCtrl(self.scrollingclasses)
@@ -846,7 +850,7 @@ def AddClassWindow(parentframe):
             #window_size.Add(self.text_ctrl3, 0, wx.UP | wx.CENTER, 15)
             #window_size.Add(self.text_ctrl31, 0, wx.UP | wx.CENTER, 15)
             Midterm = wx.StaticText(self.scrollingclasses, -1, style = wx.ALIGN_CENTRE)
-            Midterm.SetLabel('Midterm weight (0-100%) and your score ')
+            Midterm.SetLabel('Midterm weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Midterm, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl3 = wx.TextCtrl(self.scrollingclasses)
             self.text_ctrl31 = wx.TextCtrl(self.scrollingclasses)
@@ -862,11 +866,15 @@ def AddClassWindow(parentframe):
             #window_size.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 15)
             #window_size.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 15)
             Target = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Target.SetLabel('Final exam weight (0-100%) and your target course % ')
+            Target.SetLabel('Final exam weight (0-100%) ')
             self.scrollsizer.Add(Target, 0, wx.UP | wx.CENTER, 15)
             self.text_ctrl4 = wx.TextCtrl(self.scrollingclasses)
+            Target2 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
+            Target2.SetLabel('Your target overall course grade (in %) ')
             self.text_ctrl41 = wx.TextCtrl(self.scrollingclasses)
             self.scrollsizer.Add(self.text_ctrl4, 0, wx.UP | wx.CENTER, 10)
+            self.scrollsizer.AddSpacer(5)
+            self.scrollsizer.Add(Target2, 0, wx.UP | wx.CENTER, 15)
             self.scrollsizer.Add(self.text_ctrl41, 0, wx.UP | wx.CENTER, 10)
             self.scrollsizer.AddSpacer(10)
 
@@ -877,7 +885,7 @@ def AddClassWindow(parentframe):
             self.scrollsizer.AddSpacer(8)
 
             Misc1 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score ')
+            Misc1.SetLabel('Misc. grades (1), weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Misc1, 0, wx.UP | wx.CENTER, 15)
             self.text_misc11 = wx.TextCtrl(self.scrollingclasses)
             self.text_misc12 = wx.TextCtrl(self.scrollingclasses)
@@ -886,7 +894,7 @@ def AddClassWindow(parentframe):
             self.scrollsizer.AddSpacer(5)
 
             Misc2 = wx.StaticText(self.scrollingclasses, -1, style=wx.ALIGN_CENTRE)
-            Misc2.SetLabel('Misc. grades (2), weight (0-100%) and your score ')
+            Misc2.SetLabel('Misc. grades (2), weight (0-100%) and your score (in %) ')
             self.scrollsizer.Add(Misc2, 0, wx.UP | wx.CENTER, 15)
             self.text_misc21 = wx.TextCtrl(self.scrollingclasses)
             self.text_misc22 = wx.TextCtrl(self.scrollingclasses)
