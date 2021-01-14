@@ -6,15 +6,10 @@ Usage:
 """
 
 from setuptools import setup
-from plistlib import Plist
-plist = Plist.fromFile('./Info.plist')
-plist.update(dict(
-LSPrefersPPC=True,
-))
 
-APP = ['ProjectRei.py']
+APP = ['Exam Goals.py']
 DATA_FILES = [('images', ['images/Easy_A_logo.png','images/Easy_A_logo_mini.png']),('save',['save/'])]
-OPTIONS = {'iconfile':'./images/Easy_A.icns','packages': ['certifi',]}
+OPTIONS = {'iconfile':'./images/Easy_A.icns'}
 
 setup(
     app=APP,

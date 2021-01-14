@@ -12,9 +12,7 @@ import wx.lib.scrolledpanel as scrolled
 import wx.lib.colourdb as wxcolors
 import datetime as dt
 from icalendar import Calendar, Event
-"""
-### Ported everything over to Exam Goals.py edit that file instead
-"""
+
 class MainMenu(wx.Frame):
     #main panel constructor
     def __init__(self):

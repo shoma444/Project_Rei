@@ -7,11 +7,11 @@
 	<key>CFBundleDisplayName</key>
 	<string>Exam Goals</string>
 	<key>CFBundleExecutable</key>
-	<string>ProjectRei</string>
+	<string>Exam Goals</string>
 	<key>CFBundleIconFile</key>
 	<string>Easy_A.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.pythonmac.unspecified.ProjectRei</string>
+	<string>org.pythonmac.unspecified.ExamGoals</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
-	<string>SY21</string>
+	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>LSHasLocalizedDisplayName</key>
