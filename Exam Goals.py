@@ -412,7 +412,7 @@ def AddCalWindowFunc(addedclass,parentframe): # Generic warning popup window
     """
     class AddCalWindow(wx.Frame):
         def __init__(self):
-            super(AddCalWindow, self).__init__(parent=parentframe, title='Deleting entries',size=(450,230))
+            super(AddCalWindow, self).__init__(parent=parentframe, title='Exam added!',size=(450,230))
             panel = wx.Panel(self)
 
             self.addedclass = addedclass
