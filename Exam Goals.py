@@ -676,6 +676,7 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
 
         def addpress(self, event):
             classname = self.text_ctrl.GetValue()
+            self.classinfo = dict()
             self.classinfo['classname'] = classname 
 
             quizweight = self.text_ctrl1.GetValue()
@@ -708,12 +709,47 @@ def EditClassWindowFunc(class2edit,editkey,parentframe):
             Misc2weight = self.text_misc21.GetValue()
             Misc2score = self.text_misc22.GetValue()
             self.classinfo['Misc_2'] = (Misc2weight, Misc2score)
-
+            
+            #replacing empty fields with zeroes
             for i,j in self.classinfo.items():
                 if j[0] == '' or j[1] == '':
                     self.classinfo[i] = ('0', '0')
 
-            #replacing empty fields with zeroes
+            #tests for any entry value error
+            val_error_flg = False
+            for i,j in self.classinfo.items():
+                if len(j) == 2:
+                    try:
+                        float(j[0])
+                        float(j[1])
+                    except ValueError:
+                        val_error_flg = True
+                        break
+
+            #checks for correct grade weights
+            mysum = 0
+            for val in self.classinfo.values():
+            	if len(val) == 2:
+                    try:
+                        mysum = mysum + float(val[0])
+                    except:
+                        pass
+            sum_error_flg = False
+            if mysum != 100.0:
+                sum_error_flg = True
+            if val_error_flg:
+                if sum_error_flg: # both val and sum
+                    WarningPopup('Error!', 'Please ensure course weights sum to 100,\nand enter real numbers for weights and grades. ', (475,120), self)
+                    return False
+                else: # just val
+                    WarningPopup('Value entry error!', 'Please enter real numbers for weights and grades. ', (475,100), self)
+                    return False
+            else: # not val
+                if sum_error_flg: # just sum
+                    WarningPopup('Sum error!', 'Please ensure course weights sum to 100. ', (475,100), self)
+                    return False
+                else:
+                    pass 
 
             turn = 0
             #initiate loop
@@ -935,6 +971,7 @@ def AddClassWindow(parentframe):
 
         def addpress(self, event):
             classname = self.text_ctrl.GetValue()
+            self.classinfo = dict()
             self.classinfo['classname'] = classname 
 
             quizweight = self.text_ctrl1.GetValue()
@@ -968,29 +1005,48 @@ def AddClassWindow(parentframe):
             Misc2score = self.text_misc22.GetValue()
             self.classinfo['Misc_2'] = (Misc2weight, Misc2score)
 
-            #tests for any entry value error
-            for i,j in self.classinfo.items():
-            	if len(j) == 2:
-            		try:
-            			float(j[0])
-            			float(j[1])
-            		except ValueError:
-            			WarningPopup('Value entry error!', 'Please enter real numbers for weights and grades. ', (475,100), self)
-
+            #replacing empty fields with zeroes
             for i,j in self.classinfo.items():
                 if j[0] == '' or j[1] == '':
                     self.classinfo[i] = ('0', '0')
 
-            #replacing empty fields with zeroes
-
+            #tests for any entry value error
+            val_error_flg = False
+            print val_error_flg
+            for i,j in self.classinfo.items():
+                if len(j) == 2:
+                    try:
+                        float(j[0])
+                        float(j[1])
+                    except ValueError:
+                        val_error_flg = True
+                        break
             #checks for correct grade weights
             mysum = 0
             for val in self.classinfo.values():
             	if len(val) == 2:
-            		mysum = mysum + float(val[0])
-
+                    try:
+                        mysum = mysum + float(val[0])
+                    except:
+                        pass
+            sum_error_flg = False
+            
             if mysum != 100.0:
-            	WarningPopup('Sum error!', 'Ensure course weights sum to 100. ', (475,100), self)
+                sum_error_flg = True
+            print mysum,val_error_flg,sum_error_flg
+            if val_error_flg:
+                if sum_error_flg: # both val and sum
+                    WarningPopup('Error!', 'Please ensure course weights sum to 100,\nand enter real numbers for weights and grades. ', (475,120), self)
+                    return False
+                else: # just val
+                    WarningPopup('Value entry error!', 'Please enter real numbers for weights and grades. ', (475,100), self)
+                    return False
+            else: # not val
+                if sum_error_flg: # just sum
+                    WarningPopup('Sum error!', 'Please ensure course weights sum to 100. ', (475,100), self)
+                    return False
+                else:
+                    pass 
 
             turn = 0
             #initiate loop
