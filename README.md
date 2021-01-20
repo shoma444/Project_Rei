@@ -4,7 +4,7 @@ MacOS app project
 Contributors: Shoma Yamanouchi, Brian J. Park, and Hannah Cheng  
   
 Version history:  
-v1.0: First release
+v1.0: First release  
 v1.1: Added warning popups if users input course grade weights that do not sum to 100%, or if inputs are not numbers  
   
 Currently developed in Python 2.7.18 and 2.7.16 (framework build for distribution)
