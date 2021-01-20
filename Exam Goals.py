@@ -1012,7 +1012,6 @@ def AddClassWindow(parentframe):
 
             #tests for any entry value error
             val_error_flg = False
-            print val_error_flg
             for i,j in self.classinfo.items():
                 if len(j) == 2:
                     try:
@@ -1033,7 +1032,6 @@ def AddClassWindow(parentframe):
             
             if mysum != 100.0:
                 sum_error_flg = True
-            print mysum,val_error_flg,sum_error_flg
             if val_error_flg:
                 if sum_error_flg: # both val and sum
                     WarningPopup('Error!', 'Please ensure course weights sum to 100,\nand enter real numbers for weights and grades. ', (475,120), self)
