@@ -3,7 +3,7 @@
 # Website: https://sites.google.com/view/shoma-yamanouchi OR https://brianjmpark.github.io/ OR Hannah's websites
 # version 1.0
 # Developed in Python 2.7.18
-version = '1.0'
+version = '1.1'
 AppName = 'Exam Goals' # Placeholder app name
 DEVELOPED_BY_SHOMA = AppName + ' 2021 (c) was developed by:\nShoma Yamanouchi,\nBrian J. Park,\nand Hannah Cheng'
 
@@ -130,7 +130,7 @@ class MainMenu(wx.Frame):
     def menuquit(self,Event):
         self.Destroy()
     def OnAbout(self, event):
-        dlg = wx.MessageDialog(self, AppName+"\nVersion: "+version+"\n\nDeveloped by\nShoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n",
+        dlg = wx.MessageDialog(self, AppName+"\nVersion: "+version+"\n\nDeveloped by:\nShoma Yamanouchi,\nBrian J. Park,\nHannah Cheng\n\n(c) 2021 Shoma Yamanouchi",
                                 "About Me", wx.CENTER | wx.ICON_INFORMATION)
         dlg.ShowModal()
         dlg.Destroy()
