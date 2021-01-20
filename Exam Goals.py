@@ -968,13 +968,29 @@ def AddClassWindow(parentframe):
             Misc2score = self.text_misc22.GetValue()
             self.classinfo['Misc_2'] = (Misc2weight, Misc2score)
 
+            #tests for any entry value error
+            for i,j in self.classinfo.items():
+            	if len(j) == 2:
+            		try:
+            			float(j[0])
+            			float(j[1])
+            		except ValueError:
+            			WarningPopup('Value entry error!', 'Please enter real numbers for weights and grades. ', (475,100), self)
+
             for i,j in self.classinfo.items():
                 if j[0] == '' or j[1] == '':
                     self.classinfo[i] = ('0', '0')
 
             #replacing empty fields with zeroes
 
+            #checks for correct grade weights
+            mysum = 0
+            for val in self.classinfo.values():
+            	if len(val) == 2:
+            		mysum = mysum + float(val[0])
 
+            if mysum != 100.0:
+            	WarningPopup('Sum error!', 'Ensure course weights sum to 100. ', (475,100), self)
 
             turn = 0
             #initiate loop
